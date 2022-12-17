@@ -50,7 +50,7 @@ export class SignupController {
 
         const userJwt: string = SignupController.prototype.signToken(authData, userObjectId);
         req.session = {jwt: userJwt};
-
+        
         res.status(HTTP_STATUS.CREATED).json({
             message: 'User were created successfully',
             user: userDataForCache,
