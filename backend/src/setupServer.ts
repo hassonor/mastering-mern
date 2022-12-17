@@ -9,12 +9,14 @@ import HTTP_STATUS from 'http-status-codes';
 import {Server} from 'socket.io';
 import {createClient} from "redis";
 import {createAdapter} from "@socket.io/redis-adapter";
+import Logger from "bunyan";
 import "express-async-errors";
 import * as process from "process";
 import {config} from './config';
 import applicationRoutes from './routes';
 import {CustomError, IErrorResponse} from "./shared/globals/helpers/error-handler";
 
+const log: Logger = config.createLogger('server');
 
 export class HassonServer {
     private  app: Application;
@@ -61,7 +63,7 @@ export class HassonServer {
         })
 
         app.use((error: IErrorResponse, _req: Request, res:Response, next: NextFunction) =>{
-            console.log(error);
+            log.error(error);
             if(error instanceof CustomError){
                 return res.status(error.statusCode).json(error.serializeErrors());
             }
@@ -76,7 +78,7 @@ export class HassonServer {
             this.socketIoConnections(socketIO);
         }
         catch(error){
-            console.log(error)
+            log.error(error)
         }
     }
     private async createSocketIO(httpServer: http.Server): Promise<Server>{
@@ -93,8 +95,8 @@ export class HassonServer {
         return io;
     }
     private startHttpServer(httpServer: http.Server): void{
-        console.log(`Server has started with process ${process.pid}`);
-        httpServer.listen(config.PORT, ()=> console.log(`Server is running on port: ${config.PORT}`));
+        log.info(`Server has started with process ${process.pid}`);
+        httpServer.listen(config.PORT, ()=> log.info(`Server is running on port: ${config.PORT}`));
     }
 
     private socketIoConnections(io: Server):void{
