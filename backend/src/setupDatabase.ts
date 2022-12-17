@@ -1,23 +1,23 @@
-import * as process from "process";
-import mongoose from "mongoose";
-import Logger from "bunyan";
-import {config} from "./config";
+import * as process from 'process';
+import mongoose from 'mongoose';
+import Logger from 'bunyan';
+import { config } from './config';
 
 const log: Logger = config.createLogger('setupDB');
-export default () =>{
-    const connect = () => {
-        mongoose.set('strictQuery', true);
-        mongoose.connect(`${config.DATABASE_URI}`).then(
-            () => {
-                log.info('Successfully connected to database.')
-            })
-            .catch((error) =>{
-                log.error('Error when connecting to database',error);
-                return process.exit(1);
-            }
-        )
-    };
-    connect();
+export default () => {
+  const connect = () => {
+    mongoose.set('strictQuery', true);
+    mongoose
+      .connect(`${config.DATABASE_URI}`)
+      .then(() => {
+        log.info('Successfully connected to database.');
+      })
+      .catch((error) => {
+        log.error('Error when connecting to database', error);
+        return process.exit(1);
+      });
+  };
+  connect();
 
-    mongoose.connection.on('disconnected',connect);
+  mongoose.connection.on('disconnected', connect);
 };
