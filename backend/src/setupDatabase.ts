@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 import * as process from "process";
+import {config} from "./config";
 
 export default () =>{
     const connect = () => {
         mongoose.set('strictQuery', true);
-        mongoose.connect(process.env.URI_MONGO as string).then(
+        mongoose.connect(`${config.DATABASE_URI}`).then(
             () => {
                 console.log('Successfully connected to database.')
             })

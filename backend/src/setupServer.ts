@@ -4,10 +4,11 @@ import cors from "cors";
 import helmet from "helmet";
 import hpp from "hpp";
 import compression from 'compression';
-import cookierSession from 'cookie-session';
+import cookieSession from 'cookie-session';
 import HTTP_STATUS from 'http-status-codes';
 import "express-async-errors";
 import * as process from "process";
+import {config} from './config';
 
 const PORT = 5000 || process.env.PORT
 
@@ -28,16 +29,16 @@ export class HassonServer {
     }
 
     private securityMiddleware(app: Application): void{
-        app.use(cookierSession({
+        app.use(cookieSession({
             name: 'session',
-            keys: ['test1', 'test2'],
+            keys: [config.SECRET_KEY_ONE!, config.SECRET_KEY_ONE!],
             maxAge: 24 * 7 * 3600000,
-            secure: false
+            secure: config.NODE_ENV !== 'development'
         }))
         app.use(hpp());
         app.use(helmet());
         app.use(cors({
-            origin: '*',
+            origin: config.CLIENT_URL,
             credentials: true,
             optionsSuccessStatus: 200,
             methods: ['GET','POST','PUT','DELETE','OPTIONS']
