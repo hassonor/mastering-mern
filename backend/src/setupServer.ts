@@ -12,6 +12,7 @@ import {createAdapter} from "@socket.io/redis-adapter";
 import "express-async-errors";
 import * as process from "process";
 import {config} from './config';
+import applicationRoutes from './routes';
 
 
 export class HassonServer {
@@ -50,7 +51,9 @@ export class HassonServer {
         app.use(json({limit: '50mb'}));
         app.use(urlencoded({extended: true, limit: '50mb'}));
     }
-    private routeMiddleware(app: Application): void{}
+    private routeMiddleware(app: Application): void{
+        applicationRoutes(app);
+    }
     private globalErrorHandler(app: Application): void{}
     private async startServer(app: Application): Promise<void>{
         try{
