@@ -15,8 +15,11 @@
   "author": "Or Hasson",
   "license": "ISC",
   "dependencies": {
+    "@bull-board/express": "^4.9.0",
+    "@bull-board/ui": "^4.9.0",
     "@socket.io/redis-adapter": "^8.0.0",
     "bcryptjs": "^2.4.3",
+    "bull": "^4.10.2",
     "bunyan": "^1.8.15",
     "cloudinary": "^1.33.0",
     "compression": "^1.7.4",
@@ -40,6 +43,7 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
+    "@types/bull": "^4.10.0",
     "@types/bunyan": "^1.8.8",
     "@types/compression": "^1.7.2",
     "@types/cookie-session": "^2.0.44",
