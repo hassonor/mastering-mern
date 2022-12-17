@@ -10,7 +10,7 @@ import { BadRequestError } from '@global/helpers/error-handler';
 import { userService } from '@service/db/user.service';
 import { IUserDocument } from '@user/interfaces/user.interface';
 
-export class SigninController {
+export class SignInController {
     @JoiValidation(loginSchema)
     public async read(req: Request, res: Response): Promise<void> {
         const {username, password} = req.body;
@@ -32,7 +32,7 @@ export class SigninController {
                 username: existingUser.username,
                 avatarColor: existingUser.avatarColor
             },
-            config.JWT_TOKEN!
+            config.JWT_TOKEN!, {expiresIn: config.TOKEN_EXPIRES_IN_HOURS}
         );
         req.session = {jwt: userJwt};
         const userDocument: IUserDocument = {

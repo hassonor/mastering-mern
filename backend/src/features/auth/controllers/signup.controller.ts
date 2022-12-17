@@ -1,7 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { Request, Response } from 'express';
 import JWT from 'jsonwebtoken';
-import { omit } from 'lodash';
 import HTTP_STATUS from 'http-status-codes';
 import { JoiValidation } from '@global/decorators/joi-validation.decorators';
 import { signupSchema } from '@auth/schemes/signup';
@@ -46,8 +45,7 @@ export class SignupController {
         await userCache.saveUserToCache(`${userObjectId}`, uId, userDataForCache);
 
         // Add to database
-        omit(userDataForCache, ['uId', 'username', 'email', 'avatarColor', 'password']);
-        authQueue.addAuthUserJob('addAuthUserToDB', {value: userDataForCache});
+        authQueue.addAuthUserJob('addAuthUserToDB', {value: authData});
         userQueue.addUserJob('addUserToDB', {value: userDataForCache});
 
         const userJwt: string = SignupController.prototype.signToken(authData, userObjectId);

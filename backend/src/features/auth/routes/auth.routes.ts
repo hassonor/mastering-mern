@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
 import { SignupController } from '@auth/controllers/signup.controller';
-import { SigninController } from '@auth/controllers/signin.controller';
+import { SignInController } from '@auth/controllers/signin.controller';
 import { SignOutController } from '@auth/controllers/signout.controller';
 
 class AuthRoutes {
@@ -12,7 +12,7 @@ class AuthRoutes {
 
     public routes(): Router {
         this.router.post('/signup', SignupController.prototype.create);
-        this.router.post('/signin', SigninController.prototype.read);
+        this.router.post('/signin', SignInController.prototype.read);
         return this.router;
     }
 
