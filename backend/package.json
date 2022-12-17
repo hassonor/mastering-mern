@@ -17,6 +17,7 @@
   "dependencies": {
     "@socket.io/redis-adapter": "^8.0.0",
     "bunyan": "^1.8.15",
+    "cloudinary": "^1.33.0",
     "compression": "^1.7.4",
     "cookie-session": "^2.0.0",
     "cors": "^2.8.5",
