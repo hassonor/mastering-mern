@@ -13,8 +13,6 @@ import "express-async-errors";
 import * as process from "process";
 import {config} from './config';
 
-const PORT = 5000 || process.env.PORT
-
 
 export class HassonServer {
     private  app: Application;
@@ -80,7 +78,7 @@ export class HassonServer {
     }
     private startHttpServer(httpServer: http.Server): void{
         console.log(`Server has started with process ${process.pid}`);
-        httpServer.listen(PORT, ()=> console.log(`Server is running on port: ${PORT}`));
+        httpServer.listen(config.PORT, ()=> console.log(`Server is running on port: ${config.PORT}`));
     }
 
     private socketIoConnections(io: Server):void{
