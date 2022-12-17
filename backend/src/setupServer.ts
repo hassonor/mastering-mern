@@ -13,6 +13,7 @@ import "express-async-errors";
 import * as process from "process";
 import {config} from './config';
 import applicationRoutes from './routes';
+import {CustomError, IErrorResponse} from "./shared/globals/helpers/error-handler";
 
 
 export class HassonServer {
@@ -54,7 +55,19 @@ export class HassonServer {
     private routeMiddleware(app: Application): void{
         applicationRoutes(app);
     }
-    private globalErrorHandler(app: Application): void{}
+    private globalErrorHandler(app: Application): void{
+        app.all('*', (req: Request, res:Response)=>{
+            res.status(HTTP_STATUS.NOT_FOUND).json({message: `${req.originalUrl} not found`});
+        })
+
+        app.use((error: IErrorResponse, _req: Request, res:Response, next: NextFunction) =>{
+            console.log(error);
+            if(error instanceof CustomError){
+                return res.status(error.statusCode).json(error.serializeErrors());
+            }
+            next();
+        });
+    }
     private async startServer(app: Application): Promise<void>{
         try{
             const httpServer: http.Server = new http.Server(app);
