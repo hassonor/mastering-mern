@@ -9,6 +9,7 @@ class Config {
     public DATABASE_URI: string | undefined;
     public PORT: string | undefined;
     public JWT_TOKEN: string | undefined;
+    public TOKEN_EXPIRES_IN_HOURS: string | undefined;
     public NODE_ENV: string | undefined;
     public SECRET_KEY_ONE: string | undefined;
     public SECRET_KEY_TWO: string | undefined;
@@ -25,6 +26,7 @@ class Config {
         this.DATABASE_URI = process.env.DATABASE_URI || this.DEFAULT_DATABASE_URI;
         this.PORT = process.env.PORT || '5000';
         this.JWT_TOKEN = process.env.JWT_TOKEN;
+        this.TOKEN_EXPIRES_IN_HOURS = process.env.TOKEN_EXPIRES_IN_HOURS;
         this.NODE_ENV = process.env.NODE_ENV;
         this.SECRET_KEY_ONE = process.env.SECRET_KEY_ONE;
         this.SECRET_KEY_TWO = process.env.SECRET_KEY_TWO;
