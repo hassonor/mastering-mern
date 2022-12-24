@@ -6,7 +6,7 @@ import {
     INotificationSettings
 } from '@user/interfaces/user.interface';
 import { UserModel } from '@user/models/user.schema';
-import mongoose from 'mongoose';
+import { Types } from 'mongoose';
 import { indexOf } from 'lodash';
 import { AuthModel } from '@auth/models/auth.schema';
 
@@ -48,7 +48,7 @@ class UserService {
 
     public async getUserById(userId: string): Promise<IUserDocument> {
         const users: IUserDocument[] = await UserModel.aggregate([
-            {$match: {_id: new mongoose.Types.ObjectId(userId)}},
+            {$match: {_id: new Types.ObjectId(userId)}},
             {$lookup: {from: 'Auth', localField: 'authId', foreignField: '_id', as: 'authId'}},
             {$unwind: '$authId'},
             {$project: this.aggregateProject()}
@@ -58,7 +58,7 @@ class UserService {
 
     public async getUserByAuthId(authId: string): Promise<IUserDocument> {
         const users: IUserDocument[] = await UserModel.aggregate([
-            {$match: {authId: new mongoose.Types.ObjectId(authId)}},
+            {$match: {authId: new Types.ObjectId(authId)}},
             {$lookup: {from: 'Auth', localField: 'authId', foreignField: '_id', as: 'authId'}},
             {$unwind: '$authId'},
             {$project: this.aggregateProject()}
@@ -68,7 +68,7 @@ class UserService {
 
     public async getAllUsers(userId: string, skip: number, limit: number): Promise<IUserDocument[]> {
         const users: IUserDocument[] = await UserModel.aggregate([
-            {$match: {_id: {$ne: new mongoose.Types.ObjectId(userId)}}},
+            {$match: {_id: {$ne: new Types.ObjectId(userId)}}},
             {$skip: skip},
             {$limit: limit},
             {$sort: {createdAt: -1}},
