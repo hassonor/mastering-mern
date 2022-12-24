@@ -10,3 +10,7 @@
 
 1. Run `npm run dev`
 2. Navigate to `localhost:5000/queues`
+
+### For Testing the Sending Email Service use:
+
+1. you can use <a>https://ethereal.email/

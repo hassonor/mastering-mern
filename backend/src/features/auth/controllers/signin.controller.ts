@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { config } from '@root/config';
 import JWT from 'jsonwebtoken';
+import moment from 'moment';
+import publicIP from 'ip';
 import { JoiValidation } from '@global/decorators/joi-validation.decorators';
 import HTTP_STATUS from 'http-status-codes';
 import { authService } from '@service/db/auth.service';
@@ -8,7 +10,11 @@ import { loginSchema } from '@auth/schemes/signin';
 import { IAuthDocument } from '@auth/interfaces/auth.interface';
 import { BadRequestError } from '@global/helpers/error-handler';
 import { userService } from '@service/db/user.service';
-import { IUserDocument } from '@user/interfaces/user.interface';
+import { IResetPasswordParams, IUserDocument } from '@user/interfaces/user.interface';
+import { mailTransport } from '@service/emails/mail.transport';
+import { forgotPasswordTemplate } from '@service/emails/templates/forgot-password/forgot-password-template';
+import { emailQueue } from '@service/queues/email.queue';
+import { resetPasswordTemplate } from '@service/emails/templates/reset-password/reset-password-template';
 
 export class SignInController {
     @JoiValidation(loginSchema)
@@ -34,7 +40,7 @@ export class SignInController {
             },
             config.JWT_TOKEN!, {expiresIn: config.TOKEN_EXPIRES_IN_HOURS}
         );
-        req.session = {jwt: userJwt};
+
         const userDocument: IUserDocument = {
             ...user,
             authId: existingUser!._id,
@@ -44,6 +50,8 @@ export class SignInController {
             uId: existingUser!.uId,
             createdAt: existingUser!.createdAt
         } as IUserDocument;
+        
+        req.session = {jwt: userJwt};
         res.status(HTTP_STATUS.OK).json({message: 'User login successfully', user: userDocument, token: userJwt});
     }
 }
