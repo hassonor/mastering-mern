@@ -9,6 +9,7 @@ import { IAuthDocument } from '@auth/interfaces/auth.interface';
 import { BadRequestError } from '@global/helpers/error-handler';
 import { userService } from '@service/db/user.service';
 import { IUserDocument } from '@user/interfaces/user.interface';
+import { mailTransport } from '@service/emails/mail.transport';
 
 export class SignInController {
     @JoiValidation(loginSchema)
@@ -34,7 +35,7 @@ export class SignInController {
             },
             config.JWT_TOKEN!, {expiresIn: config.TOKEN_EXPIRES_IN_HOURS}
         );
-        req.session = {jwt: userJwt};
+
         const userDocument: IUserDocument = {
             ...user,
             authId: existingUser!._id,
@@ -44,6 +45,8 @@ export class SignInController {
             uId: existingUser!.uId,
             createdAt: existingUser!.createdAt
         } as IUserDocument;
+
+        req.session = {jwt: userJwt};
         res.status(HTTP_STATUS.OK).json({message: 'User login successfully', user: userDocument, token: userJwt});
     }
 }
