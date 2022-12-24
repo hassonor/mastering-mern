@@ -51,6 +51,7 @@
     "@types/compression": "^1.7.2",
     "@types/cookie-session": "^2.0.44",
     "@types/cors": "^2.8.13",
+    "@types/ejs": "^3.1.1",
     "@types/express": "^4.17.15",
     "@types/hpp": "^0.2.2",
     "@types/jsonwebtoken": "^8.5.9",
