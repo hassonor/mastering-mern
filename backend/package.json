@@ -47,6 +47,7 @@
     "typescript-transform-paths": "^3.4.4"
   },
   "devDependencies": {
+    "@jest/types": "^29.3.1",
     "@types/bcryptjs": "^2.4.2",
     "@types/bull": "^4.10.0",
     "@types/bunyan": "^1.8.8",
@@ -57,6 +58,7 @@
     "@types/express": "^4.17.15",
     "@types/hpp": "^0.2.2",
     "@types/ip": "^1.1.0",
+    "@types/jest": "^29.2.4",
     "@types/jsonwebtoken": "^8.5.9",
     "@types/lodash": "^4.14.191",
     "@types/nodemailer": "^6.4.7",
@@ -68,7 +70,9 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^15.6.0",
     "eslint-plugin-promise": "^6.1.1",
+    "jest": "^29.3.1",
     "prettier": "^2.8.1",
+    "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.1"
   }
