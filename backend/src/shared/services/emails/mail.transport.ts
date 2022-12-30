@@ -65,7 +65,7 @@ class MailTransport {
 
         try {
             await sendGridMail.send(mailOptions);
-            log.info('Production email send succefully via SendGrid');
+            log.info('Production email send successfully via SendGrid');
         } catch (error) {
             log.error('Error sending email', error);
             throw new BadRequestError('Error occurred when sending email');
