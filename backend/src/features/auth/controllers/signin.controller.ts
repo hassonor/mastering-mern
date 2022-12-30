@@ -50,7 +50,8 @@ export class SignInController {
             uId: existingUser!.uId,
             createdAt: existingUser!.createdAt
         } as IUserDocument;
-        
+
+
         req.session = {jwt: userJwt};
         res.status(HTTP_STATUS.OK).json({message: 'User login successfully', user: userDocument, token: userJwt});
     }
