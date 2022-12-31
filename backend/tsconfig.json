@@ -132,6 +132,9 @@
       "@auth/*": [
         "src/features/auth/*"
       ],
+      "@post/*": [
+        "src/features/user/*"
+      ],
       "@user/*": [
         "src/features/user/*"
       ],
