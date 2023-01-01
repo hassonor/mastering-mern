@@ -1,0 +1,18 @@
+@baseUrl = http://localhost:5000
+
+@urlPath = api/v1
+
+###
+POST {{baseUrl}}/{{urlPath}}/post
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "post": "Or Hasson Test post",
+  "bgColor": "#4aa1f2",
+  "privacy":"Private",
+  "gifUrl":"",
+  "profilePicture": "https://res.cloudinary.com/orh/image/upload/v1671895573/63a71a11bfee9cf620268075",
+  "feelings":"happy"
+}

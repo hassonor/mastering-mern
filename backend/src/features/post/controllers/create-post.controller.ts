@@ -4,8 +4,11 @@ import HTTP_STATUS from 'http-status-codes';
 import { JoiValidation } from '@global/decorators/joi-validation.decorators';
 import { postSchema } from '@root/features/post/schemes/post.schemes';
 import { IPostDocument } from '@root/features/post/interfaces/post.interface';
+import { PostCache } from '@service/redis/post.cache';
 
-export class Create {
+const postCache: PostCache = new PostCache();
+
+export class CreatePost {
     @JoiValidation(postSchema)
     public async post(req: Request, res: Response): Promise<void> {
         const {post, bgColor, privacy, gifUrl, profilePicture, feelings} = req.body;
@@ -28,6 +31,14 @@ export class Create {
             createdAt: new Date(),
             reactions: {like: 0, love: 0, happy: 0, sad: 0, wow: 0, angry: 0}
         } as unknown as IPostDocument;
+
+        await postCache.savePostToCache({
+            key: postObjectId,
+            currentUserId: `${req.currentUser!.userId}`,
+            uId: `${req.currentUser!.uId}`,
+            createdPost: createdPost
+        });
+
 
         res.status(HTTP_STATUS.CREATED).json({message: 'Post created successfully'});
     }
