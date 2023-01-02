@@ -12,7 +12,7 @@ class PostRoutes {
 
     public routes(): Router {
         this.router.post('/post', authMiddleware.checkAuthentication, CreatePost.prototype.post);
-
+        this.router.post('/post/image/post', authMiddleware.checkAuthentication, CreatePost.prototype.postWithImage);
         return this.router;
     }
 }
