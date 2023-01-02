@@ -6,6 +6,7 @@ import { postSchema } from '@root/features/post/schemes/post.schemes';
 import { IPostDocument } from '@root/features/post/interfaces/post.interface';
 import { PostCache } from '@service/redis/post.cache';
 import { socketIOPostObject } from '@root/shared/sokcets/post';
+import { postQueue } from '@service/queues/post.queue';
 
 const postCache: PostCache = new PostCache();
 
@@ -43,7 +44,8 @@ export class CreatePost {
             createdPost: createdPost
         });
 
-
+        // Add Queue Job
+        postQueue.addPostJob('addPostToDB', {key: req.currentUser!.userId, value: createdPost});
         res.status(HTTP_STATUS.CREATED).json({message: 'Post created successfully'});
     }
 }
