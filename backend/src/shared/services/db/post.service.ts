@@ -2,7 +2,8 @@ import { IPostDocument } from '@root/features/post/interfaces/post.interface';
 import { PostModel } from '@root/features/post/models/post.schema';
 import { UpdateQuery } from 'mongoose';
 import { IUserDocument } from '@post/interfaces/user.interface';
-import { UserModel } from '@post/models/user.schema';
+import { UserModel } from '@user/models/user.schema';
+
 
 class PostService {
     public async addPostToDBService(userId: string, createdPost: IPostDocument): Promise<void> {

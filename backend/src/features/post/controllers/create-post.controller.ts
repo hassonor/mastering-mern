@@ -5,7 +5,7 @@ import { JoiValidation } from '@global/decorators/joi-validation.decorators';
 import { postSchema, postWithImageSchema } from '@root/features/post/schemes/post.schemes';
 import { IPostDocument } from '@root/features/post/interfaces/post.interface';
 import { PostCache } from '@service/redis/post.cache';
-import { socketIOPostObject } from '@root/shared/sokcets/post';
+import { socketIOPostObject } from '@root/shared/sockets/post';
 import { postQueue } from '@service/queues/post.queue';
 import { UploadApiResponse } from 'cloudinary';
 import { uploads } from '@global/helpers/cloudinary-upload';
