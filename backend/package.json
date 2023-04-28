@@ -43,7 +43,7 @@
     "nodemailer": "^6.9.1",
     "redis": "^4.6.5",
     "socket.io": "^4.6.1",
-    "ttypescript": "^1.5.15",
+    "ttypescript": "^2.5.2",
     "typescript": "^5.0.4",
     "typescript-transform-paths": "^3.4.6"
   },
