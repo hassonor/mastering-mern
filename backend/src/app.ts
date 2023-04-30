@@ -4,7 +4,7 @@ import dbConnection from '@root/setupDatabase';
 import { config } from '@root/config';
 
 class Application {
-    public initialize(): void {
+    public start(): void {
         this.loadConfig();
         dbConnection();
         const app: Express = express();
@@ -19,4 +19,4 @@ class Application {
 }
 
 const application: Application = new Application();
-application.initialize();
+application.start();
