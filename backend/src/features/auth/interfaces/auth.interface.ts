@@ -2,6 +2,8 @@ import { Document } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { IUserDocument } from '@user/interfaces/user.interface';
 
+
+// create our custom field or the Request object ->  req.currentUser
 declare global {
     namespace Express {
         interface Request {
