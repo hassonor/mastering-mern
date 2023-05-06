@@ -52,6 +52,7 @@ export interface ISocialLinks {
     instagram: string;
     twitter: string;
     youtube: string;
+    linkedin: string;
 }
 
 export interface ISearchUser {
