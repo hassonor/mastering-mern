@@ -1,8 +1,8 @@
 import { IPostDocument } from '@root/features/post/interfaces/post.interface';
 import { PostModel } from '@root/features/post/models/post.schema';
 import { UpdateQuery } from 'mongoose';
-import { IUserDocument } from '@post/interfaces/user.interface';
 import { UserModel } from '@user/models/user.schema';
+import { IUserDocument } from '@user/interfaces/user.interface';
 
 
 class PostService {
