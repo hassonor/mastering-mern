@@ -3,7 +3,9 @@ import { ObjectId } from 'mongodb';
 import { IUserDocument } from '@user/interfaces/user.interface';
 
 
-// create our custom field or the Request object ->  req.currentUser
+/** create our custom field or the Request object ->  req.currentUser
+ * It will be existed only when the user is logged in.
+ **/
 declare global {
     namespace Express {
         interface Request {
