@@ -21,7 +21,8 @@ const userSchema: Schema = new Schema({
         facebook: {type: String, default: ''},
         instagram: {type: String, default: ''},
         twitter: {type: String, default: ''},
-        youtube: {type: String, default: ''}
+        youtube: {type: String, default: ''},
+        linkedin: {type: String, default: ''}
     },
     work: {type: String, default: ''},
     school: {type: String, default: ''},
