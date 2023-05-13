@@ -14,7 +14,7 @@ export class CurrentUserController {
         let user = null;
 
         const cachedUser: IUserDocument = await userCache.getUserFromCache(`${req.currentUser!.userId}`) as IUserDocument;
-        const existingUser: IUserDocument = cachedUser ? cachedUser : await userService.getUserByAuthId(`${req.currentUser!.userId}`) as IUserDocument;
+        const existingUser: IUserDocument = cachedUser ? cachedUser : await userService.getUserById(`${req.currentUser!.userId}`) as IUserDocument;
         if (Object.keys(existingUser).length) {
             isUser = true;
             token = req.session?.jwt;
