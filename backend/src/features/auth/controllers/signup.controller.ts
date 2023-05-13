@@ -48,9 +48,9 @@ export class SignupController {
         authQueue.addAuthUserJob('addAuthUserToDB', {value: authData});
         userQueue.addUserJob('addUserToDB', {value: userDataForCache});
 
-        const userJwt: string = SignupController.prototype.signToken(authData, userObjectId);
+        const userJwt: string = SignupController.prototype.signUpToken(authData, userObjectId);
         req.session = {jwt: userJwt};
-        
+
         res.status(HTTP_STATUS.CREATED).json({
             message: 'User were created successfully',
             user: userDataForCache,
@@ -58,7 +58,7 @@ export class SignupController {
         });
     }
 
-    private signToken(data: IAuthDocument, userObjectId: ObjectId): string {
+    private signUpToken(data: IAuthDocument, userObjectId: ObjectId): string {
         return JWT.sign({
             userId: userObjectId,
             uId: data.uId,
@@ -114,7 +114,8 @@ export class SignupController {
                 facebook: '',
                 instagram: '',
                 twitter: '',
-                youtube: ''
+                youtube: '',
+                linkedin: ''
             }
         } as unknown as IUserDocument;
     }
