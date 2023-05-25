@@ -21,7 +21,7 @@ export class CreatePost {
         const postObjectId: ObjectId = new ObjectId();
         const createdPost: IPostDocument = {
             _id: postObjectId,
-            userId: req.currentUser!.userId,
+            userId: req.currentUser!.userId, // Only Login user can post.
             username: req.currentUser!.username,
             email: req.currentUser!.avatarColor,
             profilePicture,
@@ -30,7 +30,7 @@ export class CreatePost {
             feelings,
             privacy,
             gifUrl,
-            commentCount: 0,
+            commentsCount: 0,
             imgVersion: '',
             imgId: '',
             createdAt: new Date(),
@@ -74,7 +74,7 @@ export class CreatePost {
             feelings,
             privacy,
             gifUrl,
-            commentCount: 0,
+            commentsCount: 0,
             imgVersion: result.version?.toString(),
             imgId: result.public_id,
             createdAt: new Date(),
