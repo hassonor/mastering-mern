@@ -16,7 +16,7 @@ const postSchema: Schema = new Schema({
     videoId: {type: String, default: ''},
     feelings: {type: String, default: ''},
     gifUrl: {type: String, default: ''},
-    privacy: {type: String, default: ''},
+    privacy: {type: String, default: 'Public'},
     commentsCount: {type: Number, default: 0},
     reactions: {
         like: {type: Number, default: 0},

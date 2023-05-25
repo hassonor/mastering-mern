@@ -79,20 +79,31 @@ export class PostCache extends BaseCache {
         const dataToSave: string[] = [...firstList, ...secondList];
 
         try {
+            // Ensure the client is connected before interacting with the database
             if (!this.client.isOpen) {
                 await this.client.connect();
             }
 
+            // Fetch the current user's post count
             const postCount: string[] = await this.client.HMGET(`users:${currentUserId}`, 'postsCount');
-            const multi: ReturnType<typeof this.client.multi> = this.client.multi(); //multi allow us to do multi redis methods on the client
-            multi.ZADD('post', {score: parseInt(uId, 10), value: `${key}`}); //add post property
-            multi.HSET(`posts:${key}`, dataToSave); // Save the new post
-            const count: number = parseInt(postCount[0], 10) + 1; // Increment post count by 1
-            multi.HSET(`users:${currentUserId}`, ['postsCount', count]); // Update the currentUser postCount field
+
+            // Multi provides a way to perform multiple operations atomically on the client
+            const multi: ReturnType<typeof this.client.multi> = this.client.multi();
+
+            // Create a new post
+            multi.ZADD('post', {score: parseInt(uId, 10), value: `${key}`});
+            multi.HSET(`posts:${key}`, dataToSave);
+
+            // Increment the user's post count
+            const count: number = parseInt(postCount[0], 10) + 1;
+            multi.HSET(`users:${currentUserId}`, ['postsCount', count]);
+
+            // Execute the multi operations
             multi.exec();
         } catch (error) {
+            // Log the error and re-throw with a more descriptive message
             log.error(error);
-            throw new ServerError('Server error. Try again.');
+            throw new ServerError('Failed to create post. Please try again.');
         }
 
     }
