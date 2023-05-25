@@ -21,7 +21,7 @@ export class CreatePost {
         const postObjectId: ObjectId = new ObjectId();
         const createdPost: IPostDocument = {
             _id: postObjectId,
-            userId: req.currentUser!.userId,
+            userId: req.currentUser!.userId, // Only Login user can post.
             username: req.currentUser!.username,
             email: req.currentUser!.avatarColor,
             profilePicture,
