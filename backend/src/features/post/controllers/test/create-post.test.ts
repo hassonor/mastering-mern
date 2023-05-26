@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Request, Response } from 'express';
-import { Server } from 'socket.io';
-import { authUserPayload } from '@root/mocks/auth.mock';
+import {Request, Response} from 'express';
+import {Server} from 'socket.io';
+import {authUserPayload} from '@root/mocks/auth.mock';
 import * as postServer from '@socket/post';
-import { newPost, postMockRequest, postMockResponse } from '@root/mocks/post.mock';
-import { postQueue } from '@service/queues/post.queue';
-import { PostCache } from '@service/redis/post.cache';
-import { CustomError } from '@global/helpers/error-handler';
+import {newPost, postMockRequest, postMockResponse} from '@root/mocks/post.mock';
+import {postQueue} from '@service/queues/post.queue';
+import {PostCache} from '@service/redis/post.cache';
+import {CustomError} from '@global/helpers/error-handler';
 import * as cloudinaryUploads from '@global/helpers/cloudinary-upload';
-import { CreatePost } from '@root/features/post/controllers/create-post.controller';
+import {CreatePost} from '@post/controllers/createPost.controller';
 
 jest.useFakeTimers();
 jest.mock('@service/queues/base.queue');
@@ -34,7 +34,7 @@ describe('Create', () => {
     });
 
     describe('Create a post', () => {
-        it('should send  the correct json response when create a new post', async() => {
+        it('should send  the correct json response when create a new post', async () => {
             const req: Request = postMockRequest(newPost, authUserPayload) as Request;
             const res: Response = postMockResponse();
             jest.spyOn(postServer.socketIOPostObject, 'emit');
@@ -87,7 +87,7 @@ describe('Create', () => {
             });
         });
 
-        it('should send correct json response', async() => {
+        it('should send correct json response', async () => {
             newPost.image = 'testing image';
             const req: Request = postMockRequest(newPost, authUserPayload) as Request;
             const res: Response = postMockResponse();

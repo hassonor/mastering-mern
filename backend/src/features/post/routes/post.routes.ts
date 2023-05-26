@@ -1,6 +1,6 @@
-import express, { Router } from 'express';
-import { authMiddleware } from '@global/helpers/auth-middleware';
-import { CreatePost } from '@root/features/post/controllers/create-post.controller';
+import express, {Router} from 'express';
+import {authMiddleware} from '@global/helpers/auth-middleware';
+import {CreatePost} from '@post/controllers/createPost.controller';
 
 class PostRoutes {
     private router: Router;
