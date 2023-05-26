@@ -1,7 +1,7 @@
-import { ObjectId } from 'mongodb';
-import mongoose, { Document } from 'mongoose';
+import {ObjectId} from 'mongodb';
+import mongoose, {Document} from 'mongoose';
 
-interface IReactions {
+export interface IReactions {
     like: number;
     love: number;
     happy: number;
