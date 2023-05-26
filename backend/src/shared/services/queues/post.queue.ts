@@ -1,6 +1,6 @@
-import { BaseQueue } from '@service/queues/base.queue';
-import { IPostJobData } from '@root/features/post/interfaces/post.interface';
-import { postWorker } from '@worker/post.worker';
+import {BaseQueue} from '@service/queues/base.queue';
+import {IPostJobData} from '@root/features/post/interfaces/post.interface';
+import {postWorker} from '@worker/post.worker';
 
 class PostQueue extends BaseQueue {
     constructor() {
@@ -11,12 +11,13 @@ class PostQueue extends BaseQueue {
          *  3rd arg: postWorker.savePostToDB job.
          */
         this.processJob('addPostToDB', 5, postWorker.savePostToDB);
+        this.processJob('deletePostFromDB', 5, postWorker.deletePostFromDB);
     }
 
     public addPostJob(name: string, data: IPostJobData): void {
         this.addJob(name, data);
     }
-
+    
 }
 
 export const postQueue: PostQueue = new PostQueue();
