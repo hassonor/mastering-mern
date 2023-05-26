@@ -240,7 +240,7 @@ export class PostCache extends BaseCache {
             multi.DEL(`reactions:${key}`);
             const count: number = parseInt(postCount[0], 10) - 1;
             multi.HSET(`users:${currentUserId}`, 'postsCount', count);
-            const results = await multi.exec();
+            await multi.exec();
         } catch (error) {
             log.error(error);
             throw new ServerError('Server error. Try again.');
