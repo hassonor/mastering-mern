@@ -49,6 +49,6 @@ export class GetPosts {
             gifUrl: '$ne'
         }, skip, limit, {createdAt: -1});
 
-        res.status(HTTP_STATUS.OK).json({message: 'All posts', posts});
+        res.status(HTTP_STATUS.OK).json({message: 'All posts with images', posts});
     }
 }
