@@ -1,8 +1,8 @@
-import { AuthPayload } from '@auth/interfaces/auth.interface';
-import { Response } from 'express';
+import {AuthPayload} from '@auth/interfaces/auth.interface';
+import {Response} from 'express';
 import mongoose from 'mongoose';
-import { existingUser } from '@root/mocks/user.mock';
-import { IPostDocument } from '@root/features/post/interfaces/post.interface';
+import {existingUser} from '@root/mocks/user.mock';
+import {IPostDocument} from '@root/features/post/interfaces/post.interface';
 
 
 export const postMockRequest = (body: IBody, currentUser?: AuthPayload | null, params?: IParams) => ({
@@ -72,4 +72,27 @@ export const postMockData: IPostDocument = {
         angry: 0
     }
 } as unknown as IPostDocument;
+
+export const updatedPost = {
+    profilePicture: postMockData.profilePicture,
+    post: postMockData.post,
+    bgColor: postMockData.bgColor,
+    feelings: 'wow',
+    privacy: 'Private',
+    gifUrl: '',
+    imgId: '',
+    imgVersion: ''
+};
+
+export const updatedPostWithImage = {
+    profilePicture: postMockData.profilePicture,
+    post: 'Wonderful',
+    bgColor: postMockData.bgColor,
+    feelings: 'wow',
+    privacy: 'Private',
+    gifUrl: '',
+    imgId: '',
+    imgVersion: '',
+    image: ''
+};
 
