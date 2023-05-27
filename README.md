@@ -10,5 +10,5 @@
 6. Redis Cache URL: `http://localhost:8081`
 7. Bull Queues: `http://localhost:5000/queues/queue/auth`
 
-React | Redux-Toolkit | NodeJS | TS | JS | MongoDB and Mongoose | Message queues | Scoket.io | Jest | Clodinary |
-Nodemailer | Terraform | AWS | CircleCI
+React | Redux-Toolkit | NodeJS | TS | JS | MongoDB and Mongoose | Message Queues | Socket.io | Jest | Cloudinary |
+Nodemailer | Terraform | AWS | CircleCI | Bull Queues | Workers 
