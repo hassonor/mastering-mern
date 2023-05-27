@@ -14,13 +14,14 @@ class PostRoutes {
 
 
     public routes(): Router {
-        this.router.post('/post', authMiddleware.checkAuthentication, CreatePost.prototype.post);
-        this.router.post('/post/image/post', authMiddleware.checkAuthentication, CreatePost.prototype.postWithImage);
-
         this.router.get('/post/all/:page', authMiddleware.checkAuthentication, GetPosts.prototype.posts);
         this.router.get('/post/images/:page', authMiddleware.checkAuthentication, GetPosts.prototype.postsWithImages);
 
+        this.router.post('/post', authMiddleware.checkAuthentication, CreatePost.prototype.post);
+        this.router.post('/post/image/post', authMiddleware.checkAuthentication, CreatePost.prototype.postWithImage);
+        
         this.router.put('/post/:postId', authMiddleware.checkAuthentication, UpdatePost.prototype.post);
+        this.router.put('/post/:postId', authMiddleware.checkAuthentication, UpdatePost.prototype.postWithImage);
 
         this.router.delete('/post/:postId', authMiddleware.checkAuthentication, DeletePost.prototype.post);
 
