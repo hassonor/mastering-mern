@@ -3,7 +3,9 @@
 ## How To Run:
 
 1. Install and Run redis (CMD/WSL) https://redis.io/docs/getting-started/installation/install-redis-on-windows/
+    1. After Installation of redis run: `sudo service redis-server start` (On WSL).
 2. Install and Run redis commander(CMD/WSL) https://www.npmjs.com/package/redis-commander
+    1. After Installation of redis-commander by npm globally , run `redis-commander` (On CMD).
 3. Run `npm i`
 4. Run `npm run dev`
 5. For Testing Run: `npm run test`
