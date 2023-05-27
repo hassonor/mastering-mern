@@ -69,13 +69,14 @@ describe('Update', () => {
             updatedPostWithImage.image = 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==';
             const req: Request = postMockRequest(updatedPostWithImage, authUserPayload, {postId: `${postMockData._id}`}) as Request;
             const res: Response = postMockResponse();
-            const postSpy = jest.spyOn(PostCache.prototype, 'updatePostInCache');
+            const postSpy = jest.spyOn(PostCache.prototype, 'updatePostInCache').mockResolvedValue(postMockData);
             jest.spyOn(postServer.socketIOPostObject, 'emit');
             jest.spyOn(postQueue, 'addPostJob');
 
             await UpdatePost.prototype.postWithImage(req, res);
+
             expect(PostCache.prototype.updatePostInCache).toHaveBeenCalledWith(`${postMockData._id}`, postSpy.mock.calls[0][1]);
-            expect(postServer.socketIOPostObject.emit).toHaveBeenCalledWith('update post', updatedPost, 'posts');
+            expect(postServer.socketIOPostObject.emit).toHaveBeenCalledWith('update post', postMockData, 'posts');
             expect(postQueue.addPostJob).toHaveBeenCalledWith('updatePostInDB', {
                 key: `${postMockData._id}`,
                 value: postMockData
@@ -95,7 +96,7 @@ describe('Update', () => {
             updatedPostWithImage.image = 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ==';
             const req: Request = postMockRequest(updatedPostWithImage, authUserPayload, {postId: `${postMockData._id}`}) as Request;
             const res: Response = postMockResponse();
-            const postSpy = jest.spyOn(PostCache.prototype, 'updatePostInCache');
+            const postSpy = jest.spyOn(PostCache.prototype, 'updatePostInCache').mockResolvedValue(postMockData);
             jest.spyOn(cloudinaryUploads, 'uploads').mockImplementation((): any => Promise.resolve({
                 version: '1234',
                 public_id: '123456'
@@ -105,7 +106,7 @@ describe('Update', () => {
 
             await UpdatePost.prototype.postWithImage(req, res);
             expect(PostCache.prototype.updatePostInCache).toHaveBeenCalledWith(`${postMockData._id}`, postSpy.mock.calls[0][1]);
-            expect(postServer.socketIOPostObject.emit).toHaveBeenCalledWith('update post', updatedPost, 'posts');
+            expect(postServer.socketIOPostObject.emit).toHaveBeenCalledWith('update post', postMockData, 'posts');
             expect(postQueue.addPostJob).toHaveBeenCalledWith('updatePostInDB', {
                 key: `${postMockData._id}`,
                 value: postMockData

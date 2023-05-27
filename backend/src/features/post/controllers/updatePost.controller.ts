@@ -32,7 +32,7 @@ export class UpdatePost {
                 throw new BadRequestError(result.message);
             }
         }
-        res.status(HTTP_STATUS.OK).json({message: 'Post with image updated successfully updated successfully'});
+        res.status(HTTP_STATUS.OK).json({message: 'Post with image updated successfully'});
     }
 
     private async updatePostWithImage(req: Request): Promise<void> {
