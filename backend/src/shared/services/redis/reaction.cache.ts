@@ -27,8 +27,7 @@ export class ReactionCache extends BaseCache {
 
             if (type) {
                 await this.client.LPUSH(`reactions:${key}`, JSON.stringify(reaction));
-                const dataToSave: string[] = ['reactions', JSON.stringify(postReactions)];
-                await this.client.HSET(`posts:${key}`, dataToSave);
+                await this.client.HSET(`posts:${key}`, 'reactions', JSON.stringify(postReactions));
             }
 
         } catch (error) {
@@ -46,17 +45,64 @@ export class ReactionCache extends BaseCache {
             const response: string[] = await this.client.LRANGE(`reactions:${key}`, 0, -1);
             const multi: ReturnType<typeof this.client.multi> = this.client.multi();
             const userPreviousReaction: IReactionDocument = this.getPreviousReaction(response, username) as IReactionDocument;
-            multi.LREM(`reactions:${key}`, 1, JSON.stringify(userPreviousReaction));
+
+            if (userPreviousReaction !== undefined) {
+                multi.LREM(`reactions:${key}`, 1, JSON.stringify(userPreviousReaction));
+            }
+            
             await multi.exec();
 
-            const dataToSave: string[] = ['reactions', JSON.stringify(postReactions)];
-            await this.client.HSET(`posts:${key}`, dataToSave);
+
+            await this.client.HSET(`posts:${key}`, 'reactions', JSON.stringify(postReactions));
+        } catch (error) {
+            log.error(error);
+            throw new ServerError('Server error. Try again.');
+        }
+    }
+
+    public async getReactionsFromCache(postId: string): Promise<IReactionDocument[]> {
+        try {
+            if (!this.client.isOpen) {
+                await this.client.connect();
+            }
+            const response: string[] = await this.client.LRANGE(`reactions:${postId}`, 0, -1);
+
+            const list: IReactionDocument[] = [];
+            for (const item of response) {
+                list.push(Helpers.parseJson(item));
+            }
+
+            return response.length ? list : [];
+
 
         } catch (error) {
             log.error(error);
             throw new ServerError('Server error. Try again.');
         }
     }
+
+    public async getSingleReactionByUsernameFromCache(postId: string, username: string): Promise<[IReactionDocument, number] | []> {
+        try {
+            if (!this.client.isOpen) {
+                await this.client.connect();
+            }
+            const response: string[] = await this.client.LRANGE(`reactions:${postId}`, 0, -1);
+
+            const list: IReactionDocument[] = [];
+            for (const item of response) {
+                list.push(Helpers.parseJson(item));
+            }
+            const result: IReactionDocument = find(list, (listItem: IReactionDocument) => {
+                return listItem?.postId === postId && listItem?.username === username;
+            }) as IReactionDocument;
+
+            return result ? [result, 1] : [];
+        } catch (error) {
+            log.error(error);
+            throw new ServerError('Server error. Try again.');
+        }
+    }
+
 
     private getPreviousReaction(response: string[], username: string): IReactionDocument | undefined {
         const list: IReactionDocument[] = [];
