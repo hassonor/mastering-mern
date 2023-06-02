@@ -1,12 +1,13 @@
-import Queue, { Job } from 'bull';
+import Queue, {Job} from 'bull';
 import Logger from 'bunyan';
-import { createBullBoard, ExpressAdapter, BullAdapter } from '@bull-board/express';
-import { config } from '@root/config';
-import { IAuthJob } from '@auth/interfaces/auth.interface';
-import { IEmailJob } from '@user/interfaces/user.interface';
-import { IPostJobData } from '@root/features/post/interfaces/post.interface';
+import {createBullBoard, ExpressAdapter, BullAdapter} from '@bull-board/express';
+import {config} from '@root/config';
+import {IAuthJob} from '@auth/interfaces/auth.interface';
+import {IEmailJob} from '@user/interfaces/user.interface';
+import {IPostJobData} from '@root/features/post/interfaces/post.interface';
+import {IReactionJob} from '@reaction/interfaces/reaction.interface';
 
-type IBaseJobData = IAuthJob | IEmailJob | IPostJobData;
+type IBaseJobData = IAuthJob | IEmailJob | IPostJobData | IReactionJob;
 
 let bullAdapters: BullAdapter[] = [];
 
