@@ -3,7 +3,7 @@ import HTTP_STATUS from 'http-status-codes';
 import {IPostDocument} from '@post/interfaces/post.interface';
 import {PostCache} from '@service/redis/post.cache';
 import {postService} from '@service/db/post.service';
-import {socketIOPostObject} from '@socket/post';
+import {socketIOPostObject} from '@socket/post.socket';
 import {postQueue} from '@service/queues/post.queue';
 import {postSchema, postWithImageSchema} from '@post/schemes/post.schemes';
 import {JoiValidation} from '@global/decorators/joi-validation.decorators';
