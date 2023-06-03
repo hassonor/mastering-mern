@@ -2,7 +2,7 @@
 import {Request, Response} from 'express';
 import {Server} from 'socket.io';
 import {authUserPayload} from '@root/mocks/auth.mock';
-import * as postServer from '@socket/post';
+import * as postServer from '@socket/post.socket';
 import {
     postMockData,
     postMockRequest,
