@@ -19,13 +19,10 @@ export class CommentCache extends BaseCache {
                 await this.client.connect();
             }
             await this.client.LPUSH(`comments:${postId}`, value);
-            const commentsCount: string[] = await this.client.HMGET(`users:${postId}`, 'commentsCount');
-
+            const commentsCount: string[] = await this.client.HMGET(`posts:${postId}`, 'commentsCount');
             let count: number = Helpers.parseJson(commentsCount[0]) as number;
             count += 1;
-
             await this.client.HSET(`posts:${postId}`, 'commentsCount', `${count}`);
-
         } catch (error) {
             log.error(error);
             throw new ServerError('Server error. Try again.');
@@ -37,15 +34,12 @@ export class CommentCache extends BaseCache {
             if (!this.client.isOpen) {
                 await this.client.connect();
             }
-
-            const results: string[] = await this.client.LRANGE(`comments:${postId}`, 0, -1);
-
+            const reply: string[] = await this.client.LRANGE(`comments:${postId}`, 0, -1);
             const list: ICommentDocument[] = [];
-            for (const item of results) {
+            for (const item of reply) {
                 list.push(Helpers.parseJson(item));
             }
             return list;
-
         } catch (error) {
             log.error(error);
             throw new ServerError('Server error. Try again.');
@@ -57,21 +51,18 @@ export class CommentCache extends BaseCache {
             if (!this.client.isOpen) {
                 await this.client.connect();
             }
-            const commentCount: number = await this.client.LLEN(`comments:${postId}`);
+            const commentsCount: number = await this.client.LLEN(`comments:${postId}`);
             const comments: string[] = await this.client.LRANGE(`comments:${postId}`, 0, -1);
-            const list: string[] = [];
+            const set: Set<string> = new Set();
             for (const item of comments) {
                 const comment: ICommentDocument = Helpers.parseJson(item) as ICommentDocument;
-                list.push(comment.username);
+                set.add(comment.username);
             }
-
             const response: ICommentNameList = {
-                count: commentCount,
-                names: list
+                count: commentsCount,
+                names: Array.from(set) // convert Set back to Array
             };
-
             return [response];
-
         } catch (error) {
             log.error(error);
             throw new ServerError('Server error. Try again.');
@@ -83,19 +74,16 @@ export class CommentCache extends BaseCache {
             if (!this.client.isOpen) {
                 await this.client.connect();
             }
-
             const comments: string[] = await this.client.LRANGE(`comments:${postId}`, 0, -1);
             const list: ICommentDocument[] = [];
             for (const item of comments) {
                 list.push(Helpers.parseJson(item));
             }
-
             const result: ICommentDocument = find(list, (listItem: ICommentDocument) => {
                 return listItem._id === commentId;
             }) as ICommentDocument;
 
             return [result];
-
         } catch (error) {
             log.error(error);
             throw new ServerError('Server error. Try again.');

@@ -12,11 +12,12 @@ class CommentService {
     public async addCommentToDB(commentData: ICommentJob): Promise<void> {
         const {postId, userTo, userFrom, comment, username} = commentData;
         const comments: Promise<ICommentDocument> = CommentsModel.create(comment);
-        const post: Query<IPostDocument, IPostDocument> = PostModel.findOneAndUpdate({
-            _id: postId
-        }, {$inc: {commentsCount: 1}}, {new: true}) as Query<IPostDocument, IPostDocument>;
-
-        const user: Promise<IUserDocument> = userCache.getUserFromCache(userTo) as unknown as Promise<IUserDocument>;
+        const post: Query<IPostDocument, IPostDocument> = PostModel.findOneAndUpdate(
+            {_id: postId},
+            {$inc: {commentsCount: 1}},
+            {new: true}
+        ) as Query<IPostDocument, IPostDocument>;
+        const user: Promise<IUserDocument> = userCache.getUserFromCache(userTo) as Promise<IUserDocument>;
         const response: [ICommentDocument, IPostDocument, IUserDocument] = await Promise.all([comments, post, user]);
 
         // send comments notification
