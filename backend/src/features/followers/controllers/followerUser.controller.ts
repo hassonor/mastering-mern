@@ -4,9 +4,10 @@ import HTTP_STATUS from 'http-status-codes';
 import {FollowerCache} from '@service/redis/follower.cache';
 import {UserCache} from '@service/redis/user.cache';
 import {IUserDocument} from '@user/interfaces/user.interface';
-import {IFollowerData, IFollowers} from '@follower/interfaces/follower.interface';
+import {IFollowerData} from '@follower/interfaces/follower.interface';
 import mongoose from 'mongoose';
 import {socketIOFollowerObject} from '@socket/follower.socket';
+import {followerQueue} from '@service/queues/follower.queue';
 
 const followerCache: FollowerCache = new FollowerCache();
 const userCache: UserCache = new UserCache();
@@ -34,7 +35,12 @@ export class Add {
         const addFollowedUserToCache: Promise<void> = followerCache.saveFollowerToCache(`following:${followerId}`, `${req.currentUser!.userId}`);
         await Promise.all([addFollowerToCache, addFollowedUserToCache]);
 
-        // send data to queue
+        followerQueue.addFollowerJob('addFollowerToDB', {
+            keyOne: `${req.currentUser!.userId}`,
+            keyTwo: `${followerId}`,
+            username: `${req.currentUser!.username}`,
+            followerDocumentId: followerObjectId
+        });
         res.status(HTTP_STATUS.OK).json({message: 'Following user now'});
     }
 
