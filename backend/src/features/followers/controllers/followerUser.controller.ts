@@ -31,8 +31,8 @@ export class Add {
 
         socketIOFollowerObject.emit('add follower', addFollowedUserData);
 
-        const addFollowerToCache: Promise<void> = followerCache.saveFollowerToCache(`followers:${req.currentUser!.userId}`, `${followerId}`);
-        const addFollowedUserToCache: Promise<void> = followerCache.saveFollowerToCache(`following:${followerId}`, `${req.currentUser!.userId}`);
+        const addFollowerToCache: Promise<void> = followerCache.saveFollowerToCache(`following:${req.currentUser!.userId}`, `${followerId}`);
+        const addFollowedUserToCache: Promise<void> = followerCache.saveFollowerToCache(`followers:${followerId}`, `${req.currentUser!.userId}`);
         await Promise.all([addFollowerToCache, addFollowedUserToCache]);
 
         followerQueue.addFollowerJob('addFollowerToDB', {
