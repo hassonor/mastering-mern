@@ -42,5 +42,5 @@ export interface IFollowerJobData {
 export interface IBlockedUserJobData {
     keyOne?: string;
     keyTwo?: string;
-    type?: string;
+    action?: string;
 }

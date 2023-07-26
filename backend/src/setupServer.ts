@@ -24,6 +24,7 @@ import applicationRoutes from '@root/routes';
 import {IErrorResponse, CustomError} from '@root/shared/globals/helpers/error-handler';
 import {SocketIOPostHandler} from '@socket/post.socket';
 import {SocketIOFollowerHandler} from '@socket/follower.socket';
+import {SocketIOUserHandler} from '@socket/user.socket';
 
 const log: Logger = config.createLogger('server');
 
@@ -131,7 +132,10 @@ export class HassonServer {
     private socketIoConnections(io: Server): void {
         const postSocketHandler: SocketIOPostHandler = new SocketIOPostHandler(io);
         const followerSocketHandler: SocketIOFollowerHandler = new SocketIOFollowerHandler(io);
+        const userSocketHandler: SocketIOUserHandler = new SocketIOUserHandler(io);
+        
         postSocketHandler.listen();
         followerSocketHandler.listen();
+        userSocketHandler.listen();
     }
 }
