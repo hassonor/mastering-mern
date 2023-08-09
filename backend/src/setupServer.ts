@@ -25,6 +25,7 @@ import {IErrorResponse, CustomError} from '@root/shared/globals/helpers/error-ha
 import {SocketIOPostHandler} from '@socket/post.socket';
 import {SocketIOFollowerHandler} from '@socket/follower.socket';
 import {SocketIOUserHandler} from '@socket/user.socket';
+import {SocketIONotificationHandler} from '@socket/notification.socket';
 
 const log: Logger = config.createLogger('server');
 
@@ -133,9 +134,11 @@ export class HassonServer {
         const postSocketHandler: SocketIOPostHandler = new SocketIOPostHandler(io);
         const followerSocketHandler: SocketIOFollowerHandler = new SocketIOFollowerHandler(io);
         const userSocketHandler: SocketIOUserHandler = new SocketIOUserHandler(io);
-        
+        const notificationSocketHandler: SocketIONotificationHandler = new SocketIONotificationHandler();
+
         postSocketHandler.listen();
         followerSocketHandler.listen();
         userSocketHandler.listen();
+        notificationSocketHandler.listen(io);
     }
 }

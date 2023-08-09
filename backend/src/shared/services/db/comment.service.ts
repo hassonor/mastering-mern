@@ -7,6 +7,7 @@ import {UserCache} from '@service/redis/user.cache';
 import {IUserDocument} from '@user/interfaces/user.interface';
 import {NotificationModel} from '@notification/models/notification.schema';
 import {INotificationDocument} from '@notification/interfaces/notification.interface';
+import {socketIONotificationObject} from '@socket/notification.socket';
 
 const userCache: UserCache = new UserCache();
 
@@ -40,10 +41,11 @@ class CommentService {
                 gifUrl: response[1].gifUrl!,
                 reaction: ''
             });
+            socketIONotificationObject.emit('insert notification', notifications, {userTo});
+            
+            // send to email queue
         }
-        // send to client with socket.io
 
-        // send to email queue
     }
 
     public async getPostComments(query: IQueryComment, sort: Record<string, 1 | -1>): Promise<ICommentDocument[]> {
