@@ -25,8 +25,7 @@ class CommentService {
         ) as Query<IPostDocument, IPostDocument>;
         const user: Promise<IUserDocument> = userCache.getUserFromCache(userTo) as Promise<IUserDocument>;
         const response: [ICommentDocument, IPostDocument, IUserDocument] = await Promise.all([comments, post, user]);
-
-        // send comments notification
+        
         if (response[2].notifications.comments && userFrom !== userTo) {
             const notificationModel: INotificationDocument = new NotificationModel();
             const notifications = await notificationModel.insertNotification({
