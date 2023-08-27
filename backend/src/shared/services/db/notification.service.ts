@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import {INotificationDocument} from '@notification/interfaces/notification.interface';
-import {NotificationModel} from '@notification/models/notification.schema';
+import { INotificationDocument } from '@notification/interfaces/notification.interface';
+import { NotificationModel } from '@notification/models/notification.schema';
 
 class NotificationService {
     public async getNotifications(userId: string): Promise<INotificationDocument[]> {
@@ -36,6 +36,14 @@ class NotificationService {
             }
         ]);
         return notifications;
+    }
+
+    public async updateNotification(notificationId: string): Promise<void> {
+        await NotificationModel.updateOne({_id: notificationId}, {$set: {read: true}}).exec();
+    }
+
+    public async deleteNotification(notificationId: string): Promise<void> {
+        await NotificationModel.deleteOne({_id: notificationId}).exec();
     }
 }
 
