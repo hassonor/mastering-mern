@@ -1,8 +1,7 @@
-import express, {Router} from 'express';
-import {authMiddleware} from '@global/helpers/auth-middleware';
-import {Get} from '@comment/controllers/getComments.controller';
-import {Add} from '@comment/controllers/addComment.controller';
-
+import express, { Router } from 'express';
+import { authMiddleware } from '@global/helpers/auth-middleware';
+import { Get } from '@comment/controllers/getComments.controller';
+import { Add } from '@comment/controllers/addComment.controller';
 
 class CommentRoutes {
     private readonly router: Router;

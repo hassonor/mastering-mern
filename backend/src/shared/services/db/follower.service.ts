@@ -1,15 +1,19 @@
-import {ObjectId, BulkWriteResult} from 'mongodb';
-import mongoose, {Query} from 'mongoose';
-import {FollowerModel} from '@follower/models/follower.schema';
-import {UserModel} from '@user/models/user.schema';
-import {IQueryComplete, IQueryDeleted} from '@post/interfaces/post.interface';
-import {IFollowerData, IFollowerDocument} from '@follower/interfaces/follower.interface';
-import {INotificationDocument, INotificationTemplate} from '@notification/interfaces/notification.interface';
-import {NotificationModel} from '@notification/models/notification.schema';
-import {socketIONotificationObject} from '@socket/notification.socket';
-import {notificationTemplate} from '@service/emails/templates/notifications/notification-template';
-import {emailQueue} from '@service/queues/email.queue';
-import {IUserDocument} from '@user/interfaces/user.interface';
+import { ObjectId, BulkWriteResult } from 'mongodb';
+import mongoose, { Query } from 'mongoose';
+import { FollowerModel } from '@follower/models/follower.schema';
+import { UserModel } from '@user/models/user.schema';
+import { IQueryComplete, IQueryDeleted } from '@post/interfaces/post.interface';
+import { IFollowerData, IFollowerDocument } from '@follower/interfaces/follower.interface';
+import { INotificationDocument, INotificationTemplate } from '@notification/interfaces/notification.interface';
+import { NotificationModel } from '@notification/models/notification.schema';
+import { socketIONotificationObject } from '@socket/notification.socket';
+import { notificationTemplate } from '@service/emails/templates/notifications/notification-template';
+import { emailQueue } from '@service/queues/email.queue';
+import { IUserDocument } from '@user/interfaces/user.interface';
+import { UserCache } from '@service/redis/user.cache';
+
+
+const userCache: UserCache = new UserCache();
 
 class FollowerService {
     public async addFollowerToDB(userId: string, followedUserId: string, username: string, followerDocumentId: ObjectId): Promise<void> {
@@ -37,7 +41,7 @@ class FollowerService {
             }
         ]);
 
-        const response: [BulkWriteResult, IUserDocument | null] = await Promise.all([users, UserModel.findOne({_id: followedUserId})]);
+        const response: [BulkWriteResult, IUserDocument | null] = await Promise.all([users, userCache.getUserFromCache(followedUserId)]);
 
         if (response[1]?.notifications.follows && userId !== followedUserId) {
             const notificationModel: INotificationDocument = new NotificationModel();
