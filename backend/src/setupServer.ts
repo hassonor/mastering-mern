@@ -13,19 +13,20 @@ import hpp from 'hpp';
 import compression from 'compression';
 import cookieSession from 'cookie-session';
 import HTTP_STATUS from 'http-status-codes';
-import {Server} from 'socket.io';
-import {createClient} from 'redis';
-import {createAdapter} from '@socket.io/redis-adapter';
+import { Server } from 'socket.io';
+import { createClient } from 'redis';
+import { createAdapter } from '@socket.io/redis-adapter';
 import Logger from 'bunyan';
 import 'express-async-errors';
 import * as process from 'process';
-import {config} from '@root/config';
+import { config } from '@root/config';
 import applicationRoutes from '@root/routes';
-import {IErrorResponse, CustomError} from '@root/shared/globals/helpers/error-handler';
-import {SocketIOPostHandler} from '@socket/post.socket';
-import {SocketIOFollowerHandler} from '@socket/follower.socket';
-import {SocketIOUserHandler} from '@socket/user.socket';
-import {SocketIONotificationHandler} from '@socket/notification.socket';
+import { IErrorResponse, CustomError } from '@root/shared/globals/helpers/error-handler';
+import { SocketIOPostHandler } from '@socket/post.socket';
+import { SocketIOFollowerHandler } from '@socket/follower.socket';
+import { SocketIOUserHandler } from '@socket/user.socket';
+import { SocketIONotificationHandler } from '@socket/notification.socket';
+import { SocketIOImageHandler } from '@socket/image.socket';
 
 const log: Logger = config.createLogger('server');
 
@@ -135,10 +136,12 @@ export class HassonServer {
         const followerSocketHandler: SocketIOFollowerHandler = new SocketIOFollowerHandler(io);
         const userSocketHandler: SocketIOUserHandler = new SocketIOUserHandler(io);
         const notificationSocketHandler: SocketIONotificationHandler = new SocketIONotificationHandler();
+        const imageSocketHandler: SocketIOImageHandler = new SocketIOImageHandler();
 
         postSocketHandler.listen();
         followerSocketHandler.listen();
         userSocketHandler.listen();
         notificationSocketHandler.listen(io);
+        imageSocketHandler.listen(io);
     }
 }
