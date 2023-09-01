@@ -1,15 +1,16 @@
-import {Request, Response} from 'express';
+import { Request, Response } from 'express';
 import HTTP_STATUS from 'http-status-codes';
-import {IPostDocument} from '@post/interfaces/post.interface';
-import {PostCache} from '@service/redis/post.cache';
-import {postService} from '@service/db/post.service';
-import {socketIOPostObject} from '@socket/post.socket';
-import {postQueue} from '@service/queues/post.queue';
-import {postSchema, postWithImageSchema} from '@post/schemes/post.schemes';
-import {JoiValidation} from '@global/decorators/joi-validation.decorators';
-import {UploadApiResponse} from 'cloudinary';
-import {uploads} from '@global/helpers/cloudinary-upload';
-import {BadRequestError} from '@global/helpers/error-handler';
+import { IPostDocument } from '@post/interfaces/post.interface';
+import { PostCache } from '@service/redis/post.cache';
+import { postService } from '@service/db/post.service';
+import { socketIOPostObject } from '@socket/post.socket';
+import { postQueue } from '@service/queues/post.queue';
+import { postSchema, postWithImageSchema } from '@post/schemes/post.schemes';
+import { JoiValidation } from '@global/decorators/joi-validation.decorators';
+import { UploadApiResponse } from 'cloudinary';
+import { uploads } from '@global/helpers/cloudinary-upload';
+import { BadRequestError } from '@global/helpers/error-handler';
+import { imageQueue } from '@service/queues/image.queue';
 
 const postCache: PostCache = new PostCache();
 
@@ -83,7 +84,11 @@ export class UpdatePost {
         const postUpdated: IPostDocument = await postCache.updatePostInCache(postId, updatedPost);
         socketIOPostObject.emit('update post', postUpdated, 'posts');
         postQueue.addPostJob('updatePostInDB', {key: postId, value: postUpdated});
-        // call image queue to add image to mongodb database
+        imageQueue.addImageJob('addImageToDB', {
+            key: `${req.currentUser!.userId}`,
+            imgId: result.public_id,
+            imgVersion: result.version.toString()
+        });
 
         return result;
     };

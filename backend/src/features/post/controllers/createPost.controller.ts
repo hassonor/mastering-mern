@@ -1,15 +1,16 @@
-import {Request, Response} from 'express';
-import {ObjectId} from 'mongodb';
+import { Request, Response } from 'express';
+import { ObjectId } from 'mongodb';
 import HTTP_STATUS from 'http-status-codes';
-import {JoiValidation} from '@global/decorators/joi-validation.decorators';
-import {postSchema, postWithImageSchema} from '@root/features/post/schemes/post.schemes';
-import {IPostDocument} from '@root/features/post/interfaces/post.interface';
-import {PostCache} from '@service/redis/post.cache';
-import {socketIOPostObject} from '@socket/post.socket';
-import {postQueue} from '@service/queues/post.queue';
-import {UploadApiResponse} from 'cloudinary';
-import {uploads} from '@global/helpers/cloudinary-upload';
-import {BadRequestError} from '@global/helpers/error-handler';
+import { JoiValidation } from '@global/decorators/joi-validation.decorators';
+import { postSchema, postWithImageSchema } from '@root/features/post/schemes/post.schemes';
+import { IPostDocument } from '@root/features/post/interfaces/post.interface';
+import { PostCache } from '@service/redis/post.cache';
+import { socketIOPostObject } from '@socket/post.socket';
+import { postQueue } from '@service/queues/post.queue';
+import { UploadApiResponse } from 'cloudinary';
+import { uploads } from '@global/helpers/cloudinary-upload';
+import { BadRequestError } from '@global/helpers/error-handler';
+import { imageQueue } from '@service/queues/image.queue';
 
 const postCache: PostCache = new PostCache();
 
@@ -93,7 +94,11 @@ export class CreatePost {
 
         // Add Queue Job
         postQueue.addPostJob('addPostToDB', {key: req.currentUser!.userId, value: createdPost});
-        // TODO: Call Image Queue to add image to mongodb database
+        imageQueue.addImageJob('addImageToDB', {
+            key: `${req.currentUser!.userId}`,
+            imgId: result.public_id,
+            imgVersion: result.version.toString()
+        });
         res.status(HTTP_STATUS.CREATED).json({message: 'Post created with image successfully'});
     }
 }
