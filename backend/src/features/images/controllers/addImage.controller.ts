@@ -54,7 +54,7 @@ export class Add {
 
         const bgImageVersion: Promise<IUserDocument> = await userCache.updateSingleUserItemInCache(
             `${req.currentUser!.userId}`,
-            'bgImageId',
+            'bgImageVersion',
             version
         ) as unknown as Promise<IUserDocument>;
 
