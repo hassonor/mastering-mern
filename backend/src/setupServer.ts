@@ -27,6 +27,7 @@ import { SocketIOFollowerHandler } from '@socket/follower.socket';
 import { SocketIOUserHandler } from '@socket/user.socket';
 import { SocketIONotificationHandler } from '@socket/notification.socket';
 import { SocketIOImageHandler } from '@socket/image.socket';
+import { SocketIOChatHandler } from '@socket/chat.socket';
 
 const log: Logger = config.createLogger('server');
 
@@ -135,12 +136,14 @@ export class HassonServer {
         const postSocketHandler: SocketIOPostHandler = new SocketIOPostHandler(io);
         const followerSocketHandler: SocketIOFollowerHandler = new SocketIOFollowerHandler(io);
         const userSocketHandler: SocketIOUserHandler = new SocketIOUserHandler(io);
+        const chatSocketHandler: SocketIOChatHandler = new SocketIOChatHandler(io);
         const notificationSocketHandler: SocketIONotificationHandler = new SocketIONotificationHandler();
         const imageSocketHandler: SocketIOImageHandler = new SocketIOImageHandler();
 
         postSocketHandler.listen();
         followerSocketHandler.listen();
         userSocketHandler.listen();
+        chatSocketHandler.listen();
         notificationSocketHandler.listen(io);
         imageSocketHandler.listen(io);
     }
