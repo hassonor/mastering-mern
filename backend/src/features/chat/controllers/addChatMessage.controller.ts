@@ -9,19 +9,18 @@ import { IUserDocument } from '@user/interfaces/user.interface';
 import { UploadApiResponse } from 'cloudinary';
 import { uploads } from '@global/helpers/cloudinary-upload';
 import { BadRequestError } from '@global/helpers/error-handler';
-import { config } from '@root/config';
 import { IMessageData, IMessageNotification } from '@chat/interfaces/chat.interface';
 import { socketIOChatObject } from '@socket/chat.socket';
 import { emailQueue } from '@service/queues/email.queue';
 import { INotificationTemplate } from '@notification/interfaces/notification.interface';
 import { notificationTemplate } from '@service/emails/templates/notifications/notification-template';
 import { MessageCache } from '@service/redis/message.cache';
+import { chatQueue } from '@service/queues/chat.queue';
 
 const userCache: UserCache = new UserCache();
 const messageCache: MessageCache = new MessageCache();
 
 export class Add {
-
     @JoiValidation(addChatSchema)
     public async message(req: Request, res: Response): Promise<void> {
         const {
@@ -35,18 +34,18 @@ export class Add {
             isRead,
             selectedImage
         } = req.body;
-
         let fileUrl = '';
         const messageObjectId: ObjectId = new ObjectId();
         const conversationObjectId: ObjectId = !conversationId ? new ObjectId() : new mongoose.Types.ObjectId(conversationId);
 
-        const sender: IUserDocument = await userCache.getUserFromCache(`${req.currentUser!.userId}`) as IUserDocument;
+        const sender: IUserDocument = (await userCache.getUserFromCache(`${req.currentUser!.userId}`)) as IUserDocument;
+
         if (selectedImage.length) {
             const result: UploadApiResponse = (await uploads(req.body.image, req.currentUser!.userId, true, true)) as UploadApiResponse;
             if (!result?.public_id) {
                 throw new BadRequestError(result.message);
             }
-            fileUrl = `https://res.cloudinary.com/${config.CLOUD_NAME}/image/upload/v${result.version}/${result.public_id}`;
+            fileUrl = `https://res.cloudinary.com/dyamr9ym3/image/upload/v${result.version}/${result.public_id}`;
         }
 
         const messageData: IMessageData = {
@@ -80,10 +79,11 @@ export class Add {
                 messageData
             });
         }
+
         await messageCache.addChatListToCache(`${req.currentUser!.userId}`, `${receiverId}`, `${conversationObjectId}`);
         await messageCache.addChatListToCache(`${receiverId}`, `${req.currentUser!.userId}`, `${conversationObjectId}`);
         await messageCache.addChatMessageToCache(`${conversationObjectId}`, messageData);
-        // 4 - add a message to chat queue
+        chatQueue.addChatJob('addChatMessageToDB', messageData);
 
         res.status(HTTP_STATUS.OK).json({message: 'Message added', conversationId: conversationObjectId});
     }
