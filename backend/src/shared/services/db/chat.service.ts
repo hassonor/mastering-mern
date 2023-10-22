@@ -2,6 +2,7 @@ import { IMessageData } from '@chat/interfaces/chat.interface';
 import { IConversationDocument } from '@chat/interfaces/conversation.interface';
 import { ConversationModel } from '@chat/models/conversation.schema';
 import { MessageModel } from '@chat/models/chat.schema';
+import { ObjectId } from 'mongodb';
 
 class ChatService {
     public async addMessageToDB(data: IMessageData): Promise<void> {
@@ -32,6 +33,40 @@ class ChatService {
             reaction: data.reaction,
             createdAt: data.createdAt
         });
+    }
+
+    public async getUserConversationList(userId: ObjectId): Promise<IMessageData[]> {
+        const messages: IMessageData[] = await MessageModel.aggregate([
+            {$match: {$or: [{senderId: userId}, {receiverId: userId}]}},
+            {
+                $group: {
+                    _id: '$conversationId',
+                    result: {$last: '$$ROOT'}
+                }
+            },
+            {
+                $project: {
+                    _id: '$result._id',
+                    conversationId: '$result.conversationId',
+                    receiverId: '$result.receiverId',
+                    receiverUsername: '$result.receiverUsername',
+                    receiverAvatarColor: '$result.receiverAvatarColor',
+                    receiverProfilePicture: '$result.receiverProfilePicture',
+                    senderUsername: '$result.senderUsername',
+                    senderId: '$result.senderId',
+                    senderAvatarColor: '$result.senderAvatarColor',
+                    senderProfilePicture: '$result.senderProfilePicture',
+                    body: '$result.body',
+                    isRead: '$result.isRead',
+                    gifUrl: '$result.gifUrl',
+                    selectedImage: '$result.selectedImage',
+                    reaction: '$result.reaction',
+                    createdAt: '$result.createdAt'
+                }
+            },
+            {$sort: {createdAt: 1}}
+        ]);
+        return messages;
     }
 }
 
