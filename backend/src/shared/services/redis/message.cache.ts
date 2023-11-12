@@ -3,7 +3,7 @@ import Logger from 'bunyan';
 import { find, findIndex } from 'lodash';
 import { config } from '@root/config';
 import { ServerError } from '@global/helpers/error-handler';
-import { IChatList, IChatUsers, IMessageData } from '@chat/interfaces/chat.interface';
+import { IChatList, IChatUsers, IGetMessageFromCache, IMessageData } from '@chat/interfaces/chat.interface';
 import { Helpers } from '@global/helpers/helpers';
 
 const log: Logger = config.createLogger('messageCache');
@@ -137,6 +137,34 @@ export class MessageCache extends BaseCache {
         }
     }
 
+    public async markMessageAsDeleted(senderId: string, receiverId: string, messageId: string, type: string): Promise<IMessageData> {
+        try {
+            if (!this.client.isOpen) {
+                await this.client.connect();
+            }
+
+            const {index, message, receiver} = await this.getMessage(senderId, receiverId, messageId);
+            const chatItem = Helpers.parseJson(message) as IMessageData;
+
+            if (type === 'deleteForMe') {
+                chatItem.deleteForMe = true;
+            } else {
+                chatItem.deleteForMe = true;
+                chatItem.deleteForEveryone = true;
+            }
+
+            await this.client.LSET(`messages:${receiver.conversationId}`, index, JSON.stringify(chatItem));
+
+            const lastMessage: string = await this.client.LINDEX(`messages:${receiver.conversationId}`, index) as string;
+
+            return Helpers.parseJson(lastMessage) as IMessageData;
+
+        } catch (error) {
+            log.error(error);
+            throw new ServerError('Server error. Try again.');
+        }
+    }
+
     private async getChatUserList(): Promise<IChatUsers[]> {
         try {
             if (!this.client.isOpen) {
@@ -156,6 +184,19 @@ export class MessageCache extends BaseCache {
             log.error(error);
             throw new ServerError('Server error. Try again.');
         }
+    }
+
+    private async getMessage(senderId: string, receiverId: string, messageId: string): Promise<IGetMessageFromCache> {
+        const userChatList: string[] = await this.client.LRANGE(`chatList:${senderId}`, 0, -1);
+        const receiver: string = find(userChatList, (listItem: string) => listItem.includes(receiverId)) as string;
+        const parsedReceiver: IChatList = Helpers.parseJson(receiver) as IChatList;
+        const messages: string[] = await this.client.LRANGE(`messages:${parsedReceiver.conversationId}`, 0, -1);
+        const message: string = find(messages, (listItem: string) => listItem.includes(messageId)) as string;
+        const index: number = findIndex(messages, (listItem: string) => listItem.includes(messageId));
+
+        return {index, message, receiver: parsedReceiver};
+
+
     }
 
 }
