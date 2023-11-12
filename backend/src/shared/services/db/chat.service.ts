@@ -68,6 +68,22 @@ class ChatService {
         ]);
         return messages;
     }
+
+    public async getMessages(senderId: ObjectId, receiverId: ObjectId, sort: Record<string, 1 | -1>): Promise<IMessageData[]> {
+        const query = {
+            $or: [
+                {senderId, receiverId},
+                {senderId: receiverId, receiverId: senderId},
+            ]
+        };
+
+        const messages: IMessageData[] = await MessageModel.aggregate([
+            {$match: query}, {$sort: sort}]);
+
+        return messages;
+
+    }
+
 }
 
 
