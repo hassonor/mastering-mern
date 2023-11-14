@@ -1,10 +1,11 @@
 import { BaseCache } from '@service/redis/base.cache';
 import Logger from 'bunyan';
-import { filter, find, findIndex } from 'lodash';
+import { filter, find, findIndex, remove } from 'lodash';
 import { config } from '@root/config';
 import { ServerError } from '@global/helpers/error-handler';
 import { IChatList, IChatUsers, IGetMessageFromCache, IMessageData } from '@chat/interfaces/chat.interface';
 import { Helpers } from '@global/helpers/helpers';
+import { IReaction } from '@reaction/interfaces/reaction.interface';
 
 const log: Logger = config.createLogger('messageCache');
 
@@ -194,6 +195,39 @@ export class MessageCache extends BaseCache {
         }
     }
 
+    public async updateMessageReaction(conversationId: string, messageId: string, reaction: string, senderName: string, type: 'add' | 'remove'): Promise<IMessageData> {
+        try {
+            if (!this.client.isOpen) {
+                await this.client.connect();
+            }
+
+            const messages: string[] = await this.client.LRANGE(`messages:${conversationId}`, 0, -1);
+            const messageIndex: number = findIndex(messages, (listItem: string) => listItem.includes(messageId));
+            const message: string = await this.client.LINDEX(`messages:${conversationId}`, messageIndex) as string;
+            const parsedMessage: IMessageData = Helpers.parseJson(message) as IMessageData;
+            const reactions: IReaction[] = [];
+
+            if (parsedMessage) {
+                remove(parsedMessage.reaction, (reaction: IReaction) => reaction.senderName === senderName);
+
+                if (type === 'add') {
+                    reactions.push({senderName, type: reaction});
+                    parsedMessage.reaction = [...parsedMessage.reaction, ...reactions];
+                    await this.client.LSET(`messages:${conversationId}`, messageIndex, JSON.stringify(parsedMessage));
+                } else {
+                    await this.client.LSET(`messages:${conversationId}`, messageIndex, JSON.stringify(parsedMessage));
+                }
+            }
+
+            const updatedMessage: string = await this.client.LINDEX(`messages:${conversationId}`, messageIndex) as string;
+            return Helpers.parseJson(updatedMessage) as IMessageData;
+            
+        } catch (error) {
+            log.error(error);
+            throw new ServerError('Server error. Try again.');
+        }
+    }
+
     private async getChatUserList(): Promise<IChatUsers[]> {
         try {
             if (!this.client.isOpen) {
@@ -224,7 +258,6 @@ export class MessageCache extends BaseCache {
         const index: number = findIndex(messages, (listItem: string) => listItem.includes(messageId));
 
         return {index, message, receiver: parsedReceiver};
-
 
     }
 

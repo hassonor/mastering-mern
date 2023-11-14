@@ -4,6 +4,7 @@ import { Add } from '@chat/controllers/addChatMessage.controller';
 import { Get } from '@chat/controllers/getChatMessages.controller';
 import { Delete } from '@chat/controllers/deleteChatMessage.controller';
 import { Update } from '@chat/controllers/updateChatMessage.controller';
+import { Message } from '@chat/controllers/addMessageReaction.controller';
 
 class ChatRoutes {
     private readonly router: Router;
@@ -19,6 +20,7 @@ class ChatRoutes {
         this.router.post('/chat/message/add-chat-users', authMiddleware.checkAuthentication, Add.prototype.addChatUsers);
         this.router.post('/chat/message/remove-chat-users', authMiddleware.checkAuthentication, Add.prototype.removeChatUsers);
         this.router.put('/chat/message/mark-as-read', authMiddleware.checkAuthentication, Update.prototype.message);
+        this.router.put('/chat/message/reaction', authMiddleware.checkAuthentication, Message.prototype.reaction);
         this.router.delete('/chat/message/mark-as-deleted/:messageId/:senderId/:receiverId/:type', authMiddleware.checkAuthentication, Delete.prototype.markMessageAsDeleted);
 
         return this.router;
