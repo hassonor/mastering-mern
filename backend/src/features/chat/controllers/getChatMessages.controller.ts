@@ -12,7 +12,7 @@ export class Get {
         let list: IMessageData[] = [];
         const cachedList: IMessageData[] = await messageCache.getUserConversationList(`${req.currentUser!.userId}`);
 
-        if (!cachedList.length) {
+        if (cachedList.length) {
             list = cachedList;
         } else {
             list = await chatService.getUserConversationList(new mongoose.Types.ObjectId(req.currentUser!.userId));

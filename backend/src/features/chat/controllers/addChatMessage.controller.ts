@@ -5,6 +5,7 @@ import { JoiValidation } from '@global/decorators/joi-validation.decorators';
 import { addChatSchema } from '@chat/schemes/chat.schemes';
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
+import { config } from '@root/config';
 import { IUserDocument } from '@user/interfaces/user.interface';
 import { UploadApiResponse } from 'cloudinary';
 import { uploads } from '@global/helpers/cloudinary-upload';
@@ -45,7 +46,7 @@ export class Add {
             if (!result?.public_id) {
                 throw new BadRequestError(result.message);
             }
-            fileUrl = `https://res.cloudinary.com/dyamr9ym3/image/upload/v${result.version}/${result.public_id}`;
+            fileUrl = `https://res.cloudinary.com/${config.CLOUD_NAME}/image/upload/v${result.version}/${result.public_id}`;
         }
 
         const messageData: IMessageData = {

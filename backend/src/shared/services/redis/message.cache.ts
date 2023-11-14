@@ -98,7 +98,7 @@ export class MessageCache extends BaseCache {
             const conversationChatList: IMessageData[] = [];
             for (const item of userChatList) {
                 const chatItem: IChatList = Helpers.parseJson(item) as IChatList;
-                const lastMessage: string = await this.client.LINDEX(`messages:${chatItem.conversationId}`, -1) as string;
+                const lastMessage: string = (await this.client.LINDEX(`messages:${chatItem.conversationId}`, -1)) as string;
                 conversationChatList.push(Helpers.parseJson(lastMessage));
             }
 
@@ -221,7 +221,7 @@ export class MessageCache extends BaseCache {
 
             const updatedMessage: string = await this.client.LINDEX(`messages:${conversationId}`, messageIndex) as string;
             return Helpers.parseJson(updatedMessage) as IMessageData;
-            
+
         } catch (error) {
             log.error(error);
             throw new ServerError('Server error. Try again.');
