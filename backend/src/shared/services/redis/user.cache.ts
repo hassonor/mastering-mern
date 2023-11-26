@@ -114,7 +114,9 @@ export class UserCache extends BaseCache {
             if (!this.client.isOpen) {
                 await this.client.connect();
             }
-            const response: string[] = await this.client.ZRANGE('user', start, end, {REV: true});
+            const response: string[] = await this.client.ZRANGE('user', start, end);
+            response.reverse();
+
             const multi: ReturnType<typeof this.client.multi> = this.client.multi();
 
             for (const key of response) {
@@ -168,4 +170,16 @@ export class UserCache extends BaseCache {
         }
     }
 
+    public async getTotalUsersInCache(): Promise<number> {
+        try {
+            if (!this.client.isOpen) {
+                await this.client.connect();
+            }
+            const count: number = await this.client.ZCARD('user');
+            return count;
+        } catch (error) {
+            log.error(error);
+            throw new ServerError('Server error. Try again.');
+        }
+    }
 }

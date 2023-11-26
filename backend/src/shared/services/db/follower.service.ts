@@ -103,6 +103,7 @@ class FollowerService {
 
     }
 
+    // folowee
     public async getFollowedUser(userObjectId: ObjectId): Promise<IFollowerData[]> {
         const followedUser: IFollowerData[] = await FollowerModel.aggregate([
             {$match: {followerId: userObjectId}},
