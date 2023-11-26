@@ -1,14 +1,14 @@
-import {BaseCache} from '@service/redis/base.cache';
+import { BaseCache } from '@service/redis/base.cache';
 import Logger from 'bunyan';
-import {config} from '@root/config';
-import {ServerError} from '@global/helpers/error-handler';
-import {IPostDocument, IReactions, ISavePostToCache} from '@root/features/post/interfaces/post.interface';
-import {Helpers} from '@global/helpers/helpers';
-import {RedisCommandRawReply} from '@redis/client/dist/lib/commands';
+import { config } from '@root/config';
+import { ServerError } from '@global/helpers/error-handler';
+import { IPostDocument, IReactions, ISavePostToCache } from '@root/features/post/interfaces/post.interface';
+import { Helpers } from '@global/helpers/helpers';
+import { RedisCommandRawReply } from '@redis/client/dist/lib/commands';
 
 const log: Logger = config.createLogger('postCache');
 
-export type PostCacheMultiType = string | number | Buffer | RedisCommandRawReply[] | IPostDocument | IPostDocument[];
+type PostCacheMultiType = string | number | Buffer | RedisCommandRawReply[] | IPostDocument | IPostDocument[];
 
 export class PostCache extends BaseCache {
     constructor() {
