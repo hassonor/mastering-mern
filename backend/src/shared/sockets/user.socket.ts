@@ -4,7 +4,7 @@ import { ILogin, ISocketData } from '@user/interfaces/user.interface';
 export let socketIOUserObject: Server;
 export const connectedUserMap: Map<string, string> = new Map();
 
-const users: string[] = [];
+let users: string[] = [];
 
 export class SocketIOUserHandler {
     private io: Server;
@@ -18,6 +18,8 @@ export class SocketIOUserHandler {
         this.io.on('connection', (socket: Socket) => {
             socket.on('setup', (data: ILogin) => {
                 this.addClientToMap(data.userId, socket.id);
+                this.addUser(data.userId);
+                this.io.emit('user online', users);
             });
             socket.on('block user', (data: ISocketData) => {
                 this.io.emit('blocked user id', data);
@@ -31,9 +33,9 @@ export class SocketIOUserHandler {
         });
     }
 
-    private addClientToMap(userId: string, sockedId: string): void {
-        if (!connectedUserMap.has(userId)) {
-            connectedUserMap.set(userId, sockedId);
+    private addClientToMap(username: string, sockedId: string): void {
+        if (!connectedUserMap.has(username)) {
+            connectedUserMap.set(username, sockedId);
         }
     }
 
@@ -44,6 +46,17 @@ export class SocketIOUserHandler {
             }) as [string, string];
 
             connectedUserMap.delete(disconnectedUser[0]);
+            this.removeUser(disconnectedUser[0]);
+            this.io.emit('user online', users);
         }
+    }
+
+    private addUser(username: string): void {
+        users.push(username);
+        users = [...new Set(users)]; // remove duplicates
+    }
+
+    private removeUser(username: string): void {
+        users = users.filter((name: string) => name !== username);
     }
 }
