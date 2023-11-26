@@ -9,7 +9,8 @@ import { authService } from '@service/db/auth.service';
 const WRONG_EMAIL = 'orhasson@email.com';
 const CORRECT_EMAIL = 'orhasson@me.com';
 const INVALID_EMAIL = 'test';
-const CORRECT_PASSWORD = 'orh1234';
+const CORRECT_PASSWORD = 'orh123456';
+const SHORT_PASSWORD = 'short';
 
 jest.mock('@service/queues/base.queue');
 jest.mock('@service/queues/email.queue');
@@ -45,7 +46,7 @@ describe('Password', () => {
             });
         });
 
-        it('should send correct json response', async() => {
+        it('should send correct json response', async () => {
             const req: Request = authMockRequest({}, {email: CORRECT_EMAIL}) as Request;
             const res: Response = authMockResponse();
             jest.spyOn(authService, 'getAuthUserByEmail').mockResolvedValue(authMock);
@@ -61,11 +62,23 @@ describe('Password', () => {
 
     describe('update', () => {
         it('should throw an error if password is empty', () => {
-            const req: Request = authMockRequest({}, {password: ''}) as Request;
+            const req: Request = authMockRequest({}, {password: '', confirmPassword: ''}) as Request;
             const res: Response = authMockResponse();
             PasswordController.prototype.update(req, res).catch((error: CustomError) => {
                 expect(error.statusCode).toEqual(400);
                 expect(error.serializeErrors().message).toEqual('Password is a required field');
+            });
+        });
+
+        it('should throw an error if password length is less than minimum length', () => {
+            const req: Request = authMockRequest({}, {
+                password: SHORT_PASSWORD,
+                confirmPassword: SHORT_PASSWORD
+            }) as Request;
+            const res: Response = authMockResponse();
+            PasswordController.prototype.update(req, res).catch((error: CustomError) => {
+                expect(error.statusCode).toEqual(400);
+                expect(error.serializeErrors().message).toEqual('Password must have a minimum length of 8 characters');
             });
         });
 
@@ -96,7 +109,7 @@ describe('Password', () => {
             });
         });
 
-        it('should send correct json response', async() => {
+        it('should send correct json response', async () => {
             const req: Request = authMockRequest({}, {
                 password: CORRECT_PASSWORD,
                 confirmPassword: CORRECT_PASSWORD

@@ -8,7 +8,7 @@ import HTTP_STATUS from 'http-status-codes';
 import { authService } from '@service/db/auth.service';
 import { loginSchema } from '@auth/schemes/signin';
 import { IAuthDocument } from '@auth/interfaces/auth.interface';
-import { BadRequestError } from '@global/helpers/error-handler';
+import { BadRequestError, ServerError } from '@global/helpers/error-handler';
 import { userService } from '@service/db/user.service';
 import { IResetPasswordParams, IUserDocument } from '@user/interfaces/user.interface';
 import { mailTransport } from '@service/emails/mail.transport';
@@ -21,6 +21,7 @@ export class SignInController {
     public async read(req: Request, res: Response): Promise<void> {
         const {username, password} = req.body;
         const existingUser: IAuthDocument = await authService.getAuthUserByUsername(username);
+
         if (!existingUser) {
             throw new BadRequestError('Invalid credentials');
         }
@@ -29,7 +30,12 @@ export class SignInController {
         if (!passwordsMatch) {
             throw new BadRequestError('Invalid credentials');
         }
+
         const user: IUserDocument = await userService.getUserByAuthId(`${existingUser._id}`);
+        if (!user) {
+            throw new ServerError('Internal Server Error');
+        }
+
         const userJwt: string = JWT.sign(
             {
                 userId: user._id,

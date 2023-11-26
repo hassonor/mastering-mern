@@ -25,6 +25,7 @@ describe('SignUp', () => {
         jest.clearAllTimers();
     });
 
+    // Test for empty username
     it('should throw an error if username is not available', () => {
         const req: Request = authMockRequest(
             {},
@@ -33,7 +34,7 @@ describe('SignUp', () => {
                 email: 'orh@google.com',
                 password: 'qwerty1234',
                 avatarColor: 'red',
-                avatarImage: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=='
+                avatarImage: 'data:image/png;base64,...'
             }
         ) as Request;
         const res: Response = authMockResponse();
@@ -44,6 +45,7 @@ describe('SignUp', () => {
         });
     });
 
+    // Test for username length less than minimum
     it('should throw an error if username length is less than minimum length', () => {
         const req: Request = authMockRequest(
             {},
@@ -52,7 +54,7 @@ describe('SignUp', () => {
                 email: 'orh@google.com',
                 password: 'qwerty',
                 avatarColor: 'red',
-                avatarImage: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=='
+                avatarImage: 'data:image/png;base64,...'
             }
         ) as Request;
         const res: Response = authMockResponse();
@@ -62,15 +64,16 @@ describe('SignUp', () => {
         });
     });
 
+    // Test for username length greater than maximum
     it('should throw an error if username length is greater than maximum length', () => {
         const req: Request = authMockRequest(
             {},
             {
-                username: 'mathematics',
+                username: 'verylongusernamebeyondthelimit',
                 email: 'orh@google.com',
                 password: 'qwerty',
                 avatarColor: 'red',
-                avatarImage: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=='
+                avatarImage: 'data:image/png;base64,...'
             }
         ) as Request;
         const res: Response = authMockResponse();
@@ -80,34 +83,35 @@ describe('SignUp', () => {
         });
     });
 
+    // Test for invalid email
     it('should throw an error if email is not valid', () => {
         const req: Request = authMockRequest(
             {},
             {
                 username: 'hassonor',
-                email: 'not valid',
-                password: 'qwerty',
+                email: 'notavalidemail',
+                password: 'qwerty1234',
                 avatarColor: 'red',
-                avatarImage: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=='
+                avatarImage: 'data:image/png;base64,...'
             }
         ) as Request;
         const res: Response = authMockResponse();
-
         SignupController.prototype.create(req, res).catch((error: CustomError) => {
             expect(error.statusCode).toEqual(400);
             expect(error.serializeErrors().message).toEqual('Email must be valid');
         });
     });
 
+    // Test for empty email
     it('should throw an error if email is not available', () => {
         const req: Request = authMockRequest(
             {},
             {
                 username: 'hassonor',
                 email: '',
-                password: 'qwerty',
+                password: 'qwerty1234',
                 avatarColor: 'red',
-                avatarImage: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=='
+                avatarImage: 'data:image/png;base64,...'
             }
         ) as Request;
         const res: Response = authMockResponse();
@@ -117,6 +121,7 @@ describe('SignUp', () => {
         });
     });
 
+    // Test for empty password
     it('should throw an error if password is not available', () => {
         const req: Request = authMockRequest(
             {},
@@ -125,7 +130,7 @@ describe('SignUp', () => {
                 email: 'orh@google.com',
                 password: '',
                 avatarColor: 'red',
-                avatarImage: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=='
+                avatarImage: 'data:image/png;base64,...'
             }
         ) as Request;
         const res: Response = authMockResponse();
@@ -135,51 +140,54 @@ describe('SignUp', () => {
         });
     });
 
+    // Test for password length less than minimum
     it('should throw an error if password length is less than minimum length', () => {
         const req: Request = authMockRequest(
             {},
             {
                 username: 'hassonor',
                 email: 'orh@google.com',
-                password: 'ma',
+                password: 'short',
                 avatarColor: 'red',
-                avatarImage: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=='
+                avatarImage: 'data:image/png;base64,...'
             }
         ) as Request;
         const res: Response = authMockResponse();
         SignupController.prototype.create(req, res).catch((error: CustomError) => {
             expect(error.statusCode).toEqual(400);
-            expect(error.serializeErrors().message).toEqual('Invalid password');
+            expect(error.serializeErrors().message).toEqual('Password must have a minimum length of 8 characters');
         });
     });
 
+    // Test for password length greater than maximum
     it('should throw an error if password length is greater than maximum length', () => {
         const req: Request = authMockRequest(
             {},
             {
                 username: 'hassonor',
                 email: 'orh@google.com',
-                password: 'mathematics1',
+                password: 'verylongpasswordthatexceedsthemaximumallowed',
                 avatarColor: 'red',
-                avatarImage: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=='
+                avatarImage: 'data:image/png;base64,...'
             }
         ) as Request;
         const res: Response = authMockResponse();
         SignupController.prototype.create(req, res).catch((error: CustomError) => {
             expect(error.statusCode).toEqual(400);
-            expect(error.serializeErrors().message).toEqual('Invalid password');
+            expect(error.serializeErrors().message).toEqual('Password should have a maximum length of 20 characters');
         });
     });
 
-    it('should throw unauthorized error is user already exist', () => {
+    // Test for user already exists
+    it('should throw unauthorized error if user already exists', () => {
         const req: Request = authMockRequest(
             {},
             {
                 username: 'hassonor',
                 email: 'orh@google.com',
-                password: 'qwerty',
+                password: 'qwerty1234',
                 avatarColor: 'red',
-                avatarImage: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=='
+                avatarImage: 'data:image/png;base64,...'
             }
         ) as Request;
         const res: Response = authMockResponse();
@@ -191,15 +199,16 @@ describe('SignUp', () => {
         });
     });
 
-    it('should set session data for valid credentials and send correct json response', async() => {
+    // Test for successful signup
+    it('should set session data for valid credentials and send correct json response', async () => {
         const req: Request = authMockRequest(
             {},
             {
                 username: 'hassonor',
                 email: 'orh@google.com',
-                password: 'qwerty',
+                password: 'qwerty1234',
                 avatarColor: 'red',
-                avatarImage: 'data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=='
+                avatarImage: 'data:image/png;base64,...'
             }
         ) as Request;
         const res: Response = authMockResponse();
