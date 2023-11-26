@@ -52,7 +52,6 @@
     "nodemailer": "^6.9.4",
     "redis": "^4.6.7",
     "socket.io": "^4.7.1",
-    "supertest": "^6.3.3",
     "swagger-stats": "^0.99.7",
     "typescript": "^4.9.5",
     "typescript-transform-paths": "^3.4.6"
@@ -84,6 +83,7 @@
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
     "tsc-alias": "^1.8.7",
-    "tsconfig-paths": "^3.14.2"
+    "tsconfig-paths": "^3.14.2",
+    "supertest": "^6.3.3"
   }
 }
