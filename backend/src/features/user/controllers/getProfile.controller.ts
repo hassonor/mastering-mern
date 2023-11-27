@@ -38,6 +38,23 @@ export class Get {
         });
     }
 
+    public async profile(req: Request, res: Response): Promise<void> {
+        const cachedUser: IUserDocument = await userCache.getUserFromCache(`${req.currentUser!.userId}`) as IUserDocument;
+        const existingUser: IUserDocument = cachedUser ? cachedUser : await userService.getUserById(`${req.currentUser!.userId}`);
+        res.status(HTTP_STATUS.OK).json({
+            message: 'Get user profile', user: existingUser
+        });
+    }
+
+    public async profileByUserId(req: Request, res: Response): Promise<void> {
+        const {userId} = req.params;
+        const cachedUser: IUserDocument = await userCache.getUserFromCache(userId) as IUserDocument;
+        const existingUser: IUserDocument = cachedUser ? cachedUser : await userService.getUserById(userId);
+        res.status(HTTP_STATUS.OK).json({
+            message: 'Get user profile by id', user: existingUser
+        });
+    }
+
     private async allUsers({newSkip, limit, skip, userId}: IUserAll): Promise<IAllUsers> {
         let users;
         let sourceOfData = '';
