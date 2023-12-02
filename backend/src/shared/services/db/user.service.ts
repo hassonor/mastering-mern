@@ -9,6 +9,7 @@ import { UserModel } from '@user/models/user.schema';
 import { Types } from 'mongoose';
 import { indexOf } from 'lodash';
 import { AuthModel } from '@auth/models/auth.schema';
+import { followerService } from '@service/db/follower.service';
 
 class UserService {
     public async addUserData(data: IUserDocument): Promise<void> {
@@ -77,6 +78,39 @@ class UserService {
             {$project: this.aggregateProject()}
         ]);
         return users;
+    }
+
+    public async getRandomUsers(userId: string): Promise<IUserDocument[]> {
+        const randomUsers: IUserDocument[] = [];
+        const users: IUserDocument[] = await UserModel.aggregate([
+            {$match: {_id: {$ne: new Types.ObjectId(userId)}}},
+            {$lookup: {from: 'Auth', localField: 'authId', foreignField: '_id', as: 'authId'}},
+            {$unwind: '$authId'},
+            {$sample: {size: 10}},
+            {
+                $addFields: {
+                    username: '$authId.username',
+                    email: '$authId.email',
+                    avatarColor: '$authId.avatarColor',
+                    uId: '$authId.uId',
+                    createdAt: '$authId.createdAt',
+                }
+            },
+            {
+                $project: {
+                    authId: 0,
+                    __v: 0
+                }
+            }
+        ]);
+        const followers: string[] = await followerService.getFollowedUsersIds(userId);
+        for (const user of users) {
+            const followerIndex = indexOf(followers, user._id.toString());
+            if (followerIndex < 0) {
+                randomUsers.push(user);
+            }
+        }
+        return randomUsers;
     }
 
 
