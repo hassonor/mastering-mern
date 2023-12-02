@@ -3,6 +3,7 @@ import { authMiddleware } from '@global/helpers/auth-middleware';
 import { Get } from '@user/controllers/getProfile.controller';
 import { Search } from '@user/controllers/searchUser.controller';
 import { Update } from '@user/controllers/changePassword';
+import { Update as UpdateBasicInfo } from '@user/controllers/updateBasicInfo.controller';
 
 class UserRoutes {
     private router: Router;
@@ -22,6 +23,8 @@ class UserRoutes {
 
 
         this.router.put('/user/profile/change-password', authMiddleware.checkAuthentication, Update.prototype.password);
+        this.router.put('/user/profile/basic-info', authMiddleware.checkAuthentication, UpdateBasicInfo.prototype.info);
+        this.router.put('/user/profile/social-links', authMiddleware.checkAuthentication, UpdateBasicInfo.prototype.social);
         return this.router;
     }
 }
