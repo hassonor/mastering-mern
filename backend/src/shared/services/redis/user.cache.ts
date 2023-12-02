@@ -156,7 +156,7 @@ export class UserCache extends BaseCache {
         }
     }
 
-    public async getRandomUsersFromCache(userId: string, excludedUserKey: string): Promise<IUserDocument[]> {
+    public async getRandomUsersFromCache(userId: string, excludedUsername: string): Promise<IUserDocument[]> {
         try {
             if (!this.client.isOpen) {
                 await this.client.connect();
@@ -176,7 +176,7 @@ export class UserCache extends BaseCache {
                 }
             }
 
-            const excludedUsernameIndex: number = findIndex(replies, ['username', excludedUserKey]);
+            const excludedUsernameIndex: number = findIndex(replies, ['username', excludedUsername]);
 
             if (excludedUsernameIndex >= 0) {
                 replies.splice(excludedUsernameIndex, 1);
