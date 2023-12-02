@@ -19,7 +19,7 @@
   },
   "keywords": [],
   "author": "Or Hasson",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@bull-board/express": "^4.12.2",
     "@faker-js/faker": "^7.6.0",

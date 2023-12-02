@@ -64,8 +64,11 @@ class HealthRoutes {
     }
 
     private fibo(data: number): number {
-        if (data <= 1) return 1;
-        return this.fibo(data - 1) + this.fibo(data - 2);
+        if (data < 2) {
+            return 1;
+        } else {
+            return this.fibo(data - 2) + this.fibo(data - 1);
+        }
     }
 }
 

@@ -4,10 +4,10 @@ import {
     IQueryComplete,
     IQueryDeleted
 } from '@root/features/post/interfaces/post.interface';
-import {PostModel} from '@root/features/post/models/post.schema';
-import {Query, UpdateQuery} from 'mongoose';
-import {UserModel} from '@user/models/user.schema';
-import {IUserDocument} from '@user/interfaces/user.interface';
+import { PostModel } from '@root/features/post/models/post.schema';
+import { Query, UpdateQuery } from 'mongoose';
+import { UserModel } from '@user/models/user.schema';
+import { IUserDocument } from '@user/interfaces/user.interface';
 
 
 class PostService {
@@ -21,6 +21,8 @@ class PostService {
         let postQuery = {};
         if (query?.imgId && query?.gifUrl) {
             postQuery = {$or: [{imgId: {$ne: ''}}, {gifUrl: {$ne: ''}}]};
+        } else if (query?.videoId) {
+            postQuery = {$or: [{videoId: {$ne: ''}}]};
         } else {
             postQuery = query;
         }

@@ -4,14 +4,14 @@ import { serverAdapter } from '@service/queues/base.queue';
 import { currentUserRoutes } from '@auth/routes/current.routes';
 import { authMiddleware } from '@global/helpers/auth-middleware';
 import { postRoutes } from '@root/features/post/routes/post.routes';
-import { reactionRoutes } from '@reaction/routes/reactionRoutes';
-import { commentRoutes } from '@comment/routes/commentRoutes';
-import { followerRoutes } from '@follower/routes/followerRoutes';
-import { notificationRoutes } from '@notification/routes/notificationRoutes';
-import { imageRoutes } from '@image/routes/imageRoutes';
-import { chatRoutes } from '@chat/routes/chatRoutes';
-import { userRoutes } from '@user/routes/userRoutes';
-import { healthRoutes } from '@user/routes/healthRoutes';
+import { reactionRoutes } from '@reaction/routes/reaction.routes';
+import { commentRoutes } from '@comment/routes/comment.routes';
+import { followerRoutes } from '@follower/routes/follower.routes';
+import { notificationRoutes } from '@notification/routes/notification.routes';
+import { imageRoutes } from '@image/routes/image.routes';
+import { chatRoutes } from '@chat/routes/chat.routes';
+import { userRoutes } from '@user/routes/user.routes';
+import { healthRoutes } from '@user/routes/health.routes';
 
 const BASE_PATH = '/api/v1';
 
