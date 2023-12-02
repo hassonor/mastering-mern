@@ -4,6 +4,7 @@ import { Get } from '@user/controllers/getProfile.controller';
 import { Search } from '@user/controllers/searchUser.controller';
 import { Update } from '@user/controllers/changePassword';
 import { Update as UpdateBasicInfo } from '@user/controllers/updateBasicInfo.controller';
+import { UpdateSettings } from '@user/controllers/updateSettings.controller';
 
 class UserRoutes {
     private router: Router;
@@ -25,6 +26,8 @@ class UserRoutes {
         this.router.put('/user/profile/change-password', authMiddleware.checkAuthentication, Update.prototype.password);
         this.router.put('/user/profile/basic-info', authMiddleware.checkAuthentication, UpdateBasicInfo.prototype.info);
         this.router.put('/user/profile/social-links', authMiddleware.checkAuthentication, UpdateBasicInfo.prototype.social);
+        this.router.put('/user/profile/notification-settings', authMiddleware.checkAuthentication, UpdateSettings.prototype.notifications);
+
         return this.router;
     }
 }
