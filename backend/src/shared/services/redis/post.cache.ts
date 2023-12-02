@@ -162,7 +162,7 @@ export class PostCache extends BaseCache {
 
             const reply: string[] = await this.client.ZRANGE(key, start, end);
             reply.reverse();
-            
+
             const multi: ReturnType<typeof this.client.multi> = this.client.multi();
             for (const value of reply) {
                 multi.HGETALL(`posts:${value}`);
@@ -186,7 +186,7 @@ export class PostCache extends BaseCache {
         }
     }
 
-    public async getUsersPostsFromCache(key: string, uId: number): Promise<IPostDocument[]> {
+    public async getUserPostsFromCache(key: string, uId: number): Promise<IPostDocument[]> {
         try {
             if (!this.client.isOpen) {
                 await this.client.connect();

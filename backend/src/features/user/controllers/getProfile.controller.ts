@@ -71,7 +71,7 @@ export class Get {
         const userName: string = Helpers.firstLetterUppercase(username);
 
         const cachedUser: IUserDocument = await userCache.getUserFromCache(userId) as IUserDocument;
-        const cachedUserPosts: IPostDocument[] = await postCache.getUsersPostsFromCache('post', parseInt(uId, 10)) as IPostDocument[];
+        const cachedUserPosts: IPostDocument[] = await postCache.getUserPostsFromCache('post', parseInt(uId, 10)) as IPostDocument[];
 
         const existingUser: IUserDocument = cachedUser ? cachedUser : await userService.getUserById(userId);
         const userPosts: IPostDocument[] = cachedUserPosts.length ? cachedUserPosts

@@ -19,7 +19,7 @@ const changePasswordSchema: ObjectSchema = Joi.object({
         'string.base': 'Password should be a type of string',
         'string.min': 'Password must have a minimum length of 8 characters',
         'string.max': 'Password should have a maximum length of 20 characters',
-        'string.empty': 'Current password is a required field'
+        'string.empty': 'Current Password is a required field'
     }),
     newPassword: Joi.string().required().min(8).max(20).messages({
         'string.base': 'Password should be a type of string',
@@ -28,7 +28,7 @@ const changePasswordSchema: ObjectSchema = Joi.object({
         'string.empty': 'New password is a required field'
     }),
     confirmPassword: Joi.string().required().valid(Joi.ref('newPassword')).messages({
-        'any.only': 'Confirm password must match the new password'
+        'any.only': 'Confirm password does not match new password.'
     })
 });
 

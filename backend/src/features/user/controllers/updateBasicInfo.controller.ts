@@ -16,7 +16,7 @@ export class Update {
             await userCache.updateSingleUserItemInCache(`${req.currentUser?.userId}`, key, `${value}`);
         }
 
-        userQueue.addUserJob('updateUserInfoInDB', {
+        userQueue.addUserJob('updateBasicInfoInDB', {
             key: req.currentUser?.userId,
             value: req.body
         });

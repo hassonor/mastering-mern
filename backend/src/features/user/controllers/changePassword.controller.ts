@@ -44,6 +44,6 @@ export class Update {
             subject: 'Password update Confirmation'
         });
 
-        res.status(HTTP_STATUS.OK).json({message: 'Password updated successfully. You will redirected shortly to the login page.'});
+        res.status(HTTP_STATUS.OK).json({message: 'Password updated successfully. You will be redirected shortly to the login page.'});
     }
 }
