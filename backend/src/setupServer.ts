@@ -101,6 +101,9 @@ export class HassonServer {
     }
 
     private async startServer(app: Application): Promise<void> {
+        if (!config.JWT_TOKEN) {
+            throw new Error('JWT_TOKEN must be provided');
+        }
         try {
             const httpServer: http.Server = new http.Server(app);
             const socketIO: Server = await this.createSocketIO(httpServer);
@@ -126,6 +129,7 @@ export class HassonServer {
     }
 
     private startHttpServer(httpServer: http.Server): void {
+        log.info(`Worker with process id of ${process.pid} has started...`);
         log.info(`Server has started with process ${process.pid}`);
         httpServer.listen(config.PORT, () =>
             log.info(`Server is running on port: ${config.PORT}`)
