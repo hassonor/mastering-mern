@@ -17,6 +17,7 @@ import { Server } from 'socket.io';
 import { createClient } from 'redis';
 import { createAdapter } from '@socket.io/redis-adapter';
 import Logger from 'bunyan';
+import apiStats from 'swagger-stats';
 import 'express-async-errors';
 import * as process from 'process';
 import { config } from '@root/config';
@@ -42,6 +43,7 @@ export class HassonServer {
         this.securityMiddleware(this.app);
         this.standardMiddleware(this.app);
         this.routeMiddleware(this.app);
+        this.apiMonitoring(this.app);
         this.globalErrorHandler(this.app);
         this.startServer(this.app);
     }
@@ -76,6 +78,14 @@ export class HassonServer {
     private routeMiddleware(app: Application): void {
         applicationRoutes(app);
     }
+
+    private apiMonitoring(app: Application): void {
+        app.use(
+            apiStats.getMiddleware({
+                uriPath: '/swagger-monitoring'
+            })
+        );
+    };
 
     private globalErrorHandler(app: Application): void {
         app.all('*', (req: Request, res: Response) => {
