@@ -1,0 +1,45 @@
+version: 2
+updates:
+  # Frontend (Vite + React)
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "hassonor"
+    labels:
+      - "dependencies"
+      - "frontend"
+    commit-message:
+      prefix: "chore(frontend)"
+    groups:
+      non-breaking:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+    ignore:
+      # Be careful with Vite major versions
+      - dependency-name: "vite"
+        update-types: ["version-update:semver-major"]
+
+  # Backend (Node.js/Express)
+  - package-ecosystem: "npm"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "hassonor"
+    labels:
+      - "dependencies"
+      - "backend"
+    commit-message:
+      prefix: "chore(backend)"
+    groups:
+      non-breaking:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
