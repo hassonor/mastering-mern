@@ -7,7 +7,6 @@ import { authService } from '@service/db/auth.service';
 import { IAuthDocument } from '@auth/interfaces/auth.interface';
 import { userService } from '@service/db/user.service';
 import { IResetPasswordParams } from '@user/interfaces/user.interface';
-import publicIP from 'ip';
 import moment from 'moment/moment';
 import { resetPasswordTemplate } from '@service/emails/templates/reset-password/reset-password-template';
 import { emailQueue } from '@service/queues/email.queue';
@@ -33,7 +32,7 @@ export class Update {
         const templateParams: IResetPasswordParams = {
             username: existingUser.username!,
             email: existingUser.email!,
-            ipaddress: publicIP.address(),
+            ipaddress: req.ip || req.socket?.remoteAddress || 'Unknown',
             date: moment().format('DD//MM//YYYY HH:mm')
         };
 

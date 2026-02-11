@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import moment from 'moment';
-import publicIP from 'ip';
 import { config } from '@root/config';
 import HTTP_STATUS from 'http-status-codes';
 import { authService } from '@service/db/auth.service';
@@ -54,7 +53,7 @@ export class PasswordController {
         const templateParams: IResetPasswordParams = {
             username: existingUser.username!,
             email: existingUser.email!,
-            ipaddress: publicIP.address(),
+            ipaddress: req.ip || req.socket?.remoteAddress || 'Unknown',
             date: moment().format('DD//MM//YYYY HH:mm')
         };
 

@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { config } from '@root/config';
 import JWT from 'jsonwebtoken';
 import moment from 'moment';
-import publicIP from 'ip';
 import { JoiValidation } from '@global/decorators/joi-validation.decorators';
 import HTTP_STATUS from 'http-status-codes';
 import { authService } from '@service/db/auth.service';
