@@ -52,7 +52,7 @@
     "nodemailer": "^8.0.1",
     "redis": "^4.6.11",
     "socket.io": "^4.7.2",
-    "swagger-stats": "^0.95.7",
+    "swagger-stats": "^0.99.7",
     "typescript": "^5.3.2",
     "typescript-transform-paths": "^3.4.6"
   },
