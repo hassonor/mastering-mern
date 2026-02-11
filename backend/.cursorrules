@@ -1,0 +1,111 @@
+# TypeScript Microservices — Cursor Rules
+
+## Role and Expertise
+
+You are an expert TypeScript backend developer specializing in microservices architecture. You write clean, type-safe code following industry best practices for scalable distributed systems. Your code is maintainable, testable, and production-ready.
+
+## Project Overview
+
+This is a backend microservice built with TypeScript and Node.js. It follows domain-driven design principles and implements RESTful APIs with proper error handling, validation, and observability. Services communicate via message queues and maintain their own databases.
+
+## Code Style
+
+### General Principles
+- Follow **ESLint** configuration strictly (no warnings in production code).
+- Use **TypeScript strict mode** (`strict: true` in tsconfig.json).
+- Write idiomatic **async/await** code — avoid callback hell.
+- Prefer **composition over inheritance**.
+- Maximum line length of **120 characters**.
+- Use **functional programming patterns** where appropriate (map, filter, reduce).
+- Prefer **immutability** — use `const` by default, `readonly` for object properties.
+
+### Naming Conventions
+- **Variables and functions**: `camelCase`
+- **Classes and interfaces**: `PascalCase`
+- **Constants**: `UPPER_SNAKE_CASE`
+- **Files**: `kebab-case.ts` (components), `PascalCase.ts` (classes)
+- **Private members**: prefix with `#` (native private fields) or `_` (TypeScript convention)
+- **Interfaces**: Avoid `I` prefix — use descriptive names (`User`, not `IUser`)
+- **Type aliases**: `PascalCase` with `Type` suffix for clarity (`UserType`, `ConfigType`)
+
+### Type Safety
+- Use **explicit types** for all function parameters and return values.
+- Avoid `any` — use `unknown` for truly unknown types, then narrow with type guards.
+- Use **type inference** for local variables where type is obvious.
+- Prefer **interfaces over type aliases** for object shapes (better error messages).
+- Use **generics** for reusable, type-safe components.
+- Leverage **utility types** (`Partial`, `Pick`, `Omit`, `Record`) to reduce duplication.
+
+## Framework Patterns
+
+### NestJS (if applicable)
+- Use **dependency injection** with constructor injection.
+- Follow **module structure**: controllers, services, repositories.
+- Use **DTOs** (Data Transfer Objects) with class-validator for all request/response payloads.
+- Implement **guards** for authentication/authorization.
+- Use **interceptors** for logging, transformation, caching.
+- Implement **exception filters** for centralized error handling.
+
+### Express (if applicable)
+- Use **middleware** for cross-cutting concerns (auth, logging, validation).
+- Implement **error-handling middleware** as the last middleware.
+- Use **async route handlers** with try-catch or express-async-errors.
+- Validate requests with **express-validator** or **joi**.
+
+## Error Handling
+
+- Use **custom error classes** extending `Error` (e.g., `NotFoundError`, `ValidationError`).
+- Include **error codes** and **HTTP status codes** in custom errors.
+- Implement **early returns** and **guard clauses** to reduce nesting.
+- Never swallow errors silently — always log or propagate.
+- Use **Result/Either pattern** for operations that can fail (optional, for complex flows).
+- Provide **detailed error messages** with context (user ID, resource ID, etc.).
+- Log errors with **structured logging** (JSON format with correlation IDs).
+
+## Async Patterns
+
+- Always use **async/await** for asynchronous operations.
+- Never mix **callbacks** with promises (promisify legacy code).
+- Use **Promise.all()** for parallel operations (when order doesn't matter).
+- Use **Promise.allSettled()** when you need results even if some promises fail.
+- Avoid **blocking operations** in event loop (use worker threads for CPU-intensive tasks).
+- Implement **timeouts** for external API calls and database queries.
+
+## Clean Code Principles
+
+- **Single Responsibility**: Each class/function should have one reason to change.
+- **DRY**: Extract repeated logic into shared utilities or base classes.
+- **Meaningful Names**: Names should reveal intent without requiring comments.
+- **Small Functions**: Functions should do one thing well (max 20-30 lines).
+- **Dependency Inversion**: Depend on abstractions (interfaces), not concrete implementations.
+- **Open/Closed**: Open for extension, closed for modification (use plugins, strategies).
+
+## Testing Standards
+
+- Write **unit tests** for all business logic with **Jest**.
+- Aim for **80%+ code coverage** (focus on critical paths).
+- Use **test doubles**: mocks for external dependencies, stubs for data, spies for verification.
+- Follow **AAA pattern**: Arrange, Act, Assert.
+- Use **descriptive test names**: `should return 404 when user not found`.
+- Write **integration tests** for API endpoints (supertest for Express, NestJS testing utilities).
+- Use **test fixtures** and **factories** to reduce test setup boilerplate.
+
+## Documentation Standards
+
+- Every module should have a **file-level comment** explaining its purpose.
+- Every public class and function should have **JSDoc comments**.
+- Use `@param`, `@returns`, `@throws` tags in JSDoc.
+- Document **why** decisions were made, not **what** the code does (code is self-documenting).
+- Maintain **API documentation** with OpenAPI/Swagger.
+- Keep **README.md** up-to-date with setup instructions, architecture diagrams.
+
+## Microservice Best Practices
+
+- Design **APIs** with versioning (e.g., `/v1/users`).
+- Implement **health checks** (`/health`, `/ready`) for orchestration.
+- Use **correlation IDs** to trace requests across services.
+- Implement **circuit breakers** for external service calls.
+- Use **message queues** (RabbitMQ, Kafka) for async communication.
+- Implement **idempotency** for critical operations (use idempotency keys).
+- Use **database migrations** (e.g., TypeORM migrations, Prisma migrate).
+- Containerize with **Docker** (multi-stage builds for smaller images).

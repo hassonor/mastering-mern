@@ -1,0 +1,152 @@
+# Next.js Frontend — Cursor Rules
+
+## Role and Expertise
+
+You are an expert React and Next.js frontend developer. You build modern, performant, accessible web applications following industry best practices. Your code is type-safe, maintainable, and optimized for user experience.
+
+## Project Overview
+
+This is a frontend application built with Next.js 14+, React 18+, and TypeScript. It follows the App Router architecture with server and client components, implements responsive design with Tailwind CSS, and emphasizes performance, accessibility, and SEO.
+
+## Code Style
+
+### General Principles
+- Follow **ESLint** and **Prettier** configurations strictly.
+- Use **TypeScript strict mode** for type safety.
+- Write **functional components** with hooks (no class components).
+- Prefer **server components** by default (use `'use client'` only when needed).
+- Maximum line length of **100 characters** for JSX readability.
+- Use **Tailwind CSS** for styling (avoid CSS modules unless necessary).
+- Follow **component composition** patterns for reusability.
+
+### Naming Conventions
+- **Components**: `PascalCase` (e.g., `UserProfile.tsx`)
+- **Hooks**: `camelCase` with `use` prefix (e.g., `useAuth`, `useFetch`)
+- **Utilities**: `camelCase` (e.g., `formatDate`, `validateEmail`)
+- **Constants**: `UPPER_SNAKE_CASE` (e.g., `API_BASE_URL`)
+- **Types/Interfaces**: `PascalCase` (e.g., `User`, `ApiResponse`)
+- **Files**: `kebab-case` for routes, `PascalCase` for components
+- **CSS classes**: Tailwind utility classes (no custom class names unless component library)
+
+### Type Safety
+- Use **explicit types** for props, state, and function returns.
+- Avoid `any` — use `unknown` and type guards for dynamic data.
+- Use **interfaces** for component props (better documentation).
+- Leverage **TypeScript utility types** (`Partial`, `Pick`, `Omit`).
+- Use **generics** for reusable components (e.g., `Table<T>`).
+
+## Component Patterns
+
+### React Best Practices
+- Use **functional components** with hooks exclusively.
+- Keep components **small and focused** (max 150 lines).
+- Extract **custom hooks** for shared logic (data fetching, subscriptions).
+- Use **React.memo()** for expensive components (profile first).
+- Prefer **composition over props drilling** (use Context or props composition).
+- Use **children prop** for flexible component APIs.
+
+### Next.js App Router
+- Use **server components** by default for static content and data fetching.
+- Mark components as client components (`'use client'`) only when using:
+  - Browser APIs (localStorage, window)
+  - React hooks (useState, useEffect, useContext)
+  - Event listeners (onClick, onChange)
+- Use **async server components** for data fetching (no useEffect needed).
+- Implement **loading.tsx** and **error.tsx** for route segments.
+- Use **route handlers** (`route.ts`) for API endpoints.
+
+### State Management
+- Use **useState** for local component state.
+- Use **useReducer** for complex state logic (multiple sub-values).
+- Use **Context API** for global state (auth, theme, language).
+- Use **URL state** for shareable/bookmarkable state (query params, route params).
+- Consider **Zustand** or **Jotai** for complex client-side state (avoid Redux unless necessary).
+- Use **React Query** or **SWR** for server state (caching, revalidation).
+
+## Performance Optimization
+
+- Use **next/image** for all images (automatic optimization).
+- Use **next/link** for navigation (prefetching, client-side transitions).
+- Use **next/font** for font optimization (self-hosting, no layout shift).
+- Implement **lazy loading** with `React.lazy()` and `Suspense`.
+- Use **dynamic imports** for code splitting (`next/dynamic`).
+- Optimize **bundle size**: analyze with `@next/bundle-analyzer`.
+- Use **streaming** and **Suspense** for progressive rendering.
+- Implement **ISR** (Incremental Static Regeneration) for frequently updated pages.
+
+## Accessibility (a11y)
+
+- Use **semantic HTML** (`<nav>`, `<main>`, `<article>`, `<button>`).
+- Provide **alt text** for all images (descriptive, not decorative).
+- Ensure **keyboard navigation** works (focus indicators, tab order).
+- Use **ARIA attributes** when semantic HTML is insufficient.
+- Maintain **color contrast** ratios (WCAG AA minimum: 4.5:1 for text).
+- Implement **skip links** for keyboard users.
+- Test with **screen readers** (VoiceOver, NVDA).
+- Use **labels** for all form inputs (visible or `aria-label`).
+
+## Error Handling
+
+- Implement **error boundaries** with `error.tsx` route segments.
+- Show **user-friendly error messages** (avoid exposing stack traces).
+- Use **toast notifications** for transient errors (network failures, validation).
+- Implement **retry logic** for failed API calls (exponential backoff).
+- Log errors to **error tracking service** (Sentry, LogRocket).
+- Validate **user input** on both client and server.
+- Handle **loading states** explicitly (skeletons, spinners).
+
+## Data Fetching
+
+### Server Components (Preferred)
+```typescript
+// app/users/page.tsx
+async function UsersPage() {
+  const users = await fetch('https://api.example.com/users', {
+    next: { revalidate: 3600 } // ISR: revalidate every hour
+  }).then(res => res.json())
+
+  return <UserList users={users} />
+}
+```
+
+### Client Components
+- Use **React Query** or **SWR** for data fetching with caching.
+- Implement **optimistic updates** for better UX.
+- Handle **race conditions** (cancel stale requests).
+
+## Testing Standards
+
+- Write **component tests** with **React Testing Library**.
+- Write **E2E tests** with **Playwright** or **Cypress**.
+- Test **user interactions**, not implementation details.
+- Use **semantic queries** (`getByRole`, `getByLabelText`).
+- Mock **API calls** with MSW (Mock Service Worker).
+- Aim for **70%+ coverage** on critical user flows.
+- Test **accessibility** (axe-core integration).
+
+## Documentation Standards
+
+- Document **complex components** with JSDoc.
+- Use **Storybook** for component library documentation (optional).
+- Keep **README.md** updated with setup, architecture, conventions.
+- Document **environment variables** in `.env.example`.
+- Add **inline comments** for non-obvious logic (why, not what).
+
+## UI/UX Best Practices
+
+- Design **mobile-first** (responsive breakpoints: sm, md, lg, xl).
+- Use **consistent spacing** (Tailwind spacing scale).
+- Implement **loading states** (skeletons for content, spinners for actions).
+- Show **empty states** with helpful guidance.
+- Provide **feedback** for all user actions (success, error, loading).
+- Use **debouncing** for search inputs (300ms delay).
+- Implement **infinite scroll** or **pagination** for large lists.
+- Use **animations** sparingly (prefer subtle transitions).
+
+## Internationalization (i18n)
+
+- Use **next-intl** or **react-i18next** for translations.
+- Support **RTL languages** (Hebrew, Arabic) with `dir` attribute.
+- Format **dates, numbers, currencies** with `Intl` API.
+- Store **locale** in URL or cookies.
+- Provide **language switcher** component.
