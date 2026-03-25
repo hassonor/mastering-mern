@@ -15,8 +15,8 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-loading-skeleton": "^3.3.1",
-    "sass": "^1.69.5"
+    "react-loading-skeleton": "^3.5.0",
+    "sass": "^1.98.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.37",
@@ -26,8 +26,8 @@
     "@vitejs/plugin-react": "^4.2.0",
     "eslint": "^8.53.0",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.4",
-    "prettier": "^3.1.0",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "prettier": "^3.8.1",
     "typescript": "^5.2.2",
     "vite": "^7.3.1"
   }
